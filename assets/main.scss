@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    @apply h-full;
+}
+
+body {
+    @apply h-full;
+}
+
+div#__nuxt {
+    @apply h-full;
+}
+
+div#__nuxt>div {
+    @apply h-full;
+}
+
+// input,select,textarea{
+//     @apply flex-grow;
+// }
+
+table .dp__main,
+table .dp__main> :first-child,
+table .dp__input_wrap,
+table .dp__input_wrap input {
+    @apply h-full;
+}
+
+table.tacky {
+    @apply whitespace-nowrap m-0 border-none border-collapse border-spacing-0;
+    @apply table-fixed;
+}
+
+// table.sticky:focus {
+//     box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+//     outline: 0;
+// }
+
+table.tacky thead th,
+table.tacky tbody td,
+table.tacky tbody th {
+    @apply p-1;
+    @apply w-[25vw];
+    @apply relative;
+}
+
+table.tacky {
+    @apply border-x-[1px] border-b-[1px] border-solid border-slate-700;
+}
+
+table.tacky thead th::before,
+table.tacky tbody td::before,
+table.tacky tbody th::before {
+    @apply ring-1 ring-inset ring-slate-700;
+    @apply absolute top-0 left-0 w-full h-full z-0;
+    content: "";
+}
+
+table.tacky th *,
+table.tacky td *:not(.dp__main *) {
+    @apply relative;
+}
+
+
+
+table.tacky thead th {
+    @apply z-[1] bg-slate-600 text-white sticky top-[inherit];
+    // width: 25vw;
+}
+
+table.tacky td {
+    @apply bg-white py-1 px-2 text-center h-1;
+}
+
+table.tacky tbody th {
+    @apply sticky left-0 bg-white z-[1];
+}
+
+table.tacky thead th.tools,
+table.tacky tbody td.tools {
+    @apply p-3 w-10;
+}
+
+
+tr.active td,
+tr.active th {
+    @apply bg-green-300 #{!important};
+}
+
+.unselectable,
+.unselectable *,
+.unselectable td,
+.unselectable th {
+    @apply cursor-not-allowed;
+    @apply bg-gray-400 #{!important};
+}
+
+:disabled {
+    @apply cursor-not-allowed;
+    @apply bg-gray-400 #{!important};
+}
+
+table.sticky thead th.tools {
+    @apply p-3 w-10
+}
+
+table.sticky tbody td.tools {
+    @apply p-3 w-10
+}
+
+
+td.cell {
+    padding: 1px !important;
+}
+
+.cell button {
+    @apply border-none;
+}
+
+.card-border {
+    @apply min-h-[36px];
+    // @apply grow min-h-[36px];
+}
+
+.card-border,
+input,
+select,
+textarea,
+button {
+    @apply block rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-300;
+}
+
+.card-border,
+input,
+select,
+textarea {
+    @apply w-full;
+}
+
+.card-border.disabled {
+    @apply cursor-not-allowed;
+    @apply bg-gray-400 #{!important};
+}
+
+button {
+    @apply text-center;
+}
+
+table input,
+table select,
+table textarea {
+    @apply block rounded-none border-0 px-1.5 py-1.5 text-gray-900 shadow-none ring-0 ring-inset ring-slate-700 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-indigo-300;
+    // @apply block rounded-none border-0 px-1.5 py-1.5 text-gray-900 shadow-none ring-1 ring-inset ring-slate-700 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-indigo-300;
+    @apply w-full;
+}
+
+table button {
+    @apply block rounded-none border-0 px-1.5 py-1.5 text-gray-900 shadow-none ring-0 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-indigo-300;
+    @apply w-full flex justify-center;
+}
+
+table td>div:first-child {
+    @apply p-1;
+}
+
+.dp__main button {
+    @apply ring-0;
+
+}
+
+#print_target {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+@media screen {
+    * div {
+        display: block;
+    }
+
+    #print_target {
+        display: none;
+    }
+}
+
+@media print {
+    * div {
+        display: none;
+    }
+
+    #print_target html,
+    #print_target body {
+        margin: 0;
+    }
+
+    #print_target,
+    #print_target>* {
+        display: block;
+    }
+}
+
+.box-fixed {
+    @apply w-full h-full fixed z-10 flex items-center justify-center top-0 left-0;
+}
+
+.box-fixed>div {
+    @apply bg-white flex flex-col border-solid border-gray-400;
+    width: 95%;
+    height: 95%;
+    border-width: 1px;
+}
