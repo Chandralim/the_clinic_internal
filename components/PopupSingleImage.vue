@@ -6,7 +6,7 @@
             </div>
         
             <div class="mx-0 my-2 text-justify" v-if="photo">
-                <img :src="useUtils().imgloc(photo)" alt="" class="max-w-full max-h-full">
+                <img :src="photo" alt="" class="max-w-full max-h-full">
             </div>
     
             <div class="flex w-full justify-between mt-5">

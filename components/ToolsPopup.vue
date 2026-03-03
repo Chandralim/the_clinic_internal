@@ -3,14 +3,14 @@
 
     <div ref="popup">
       <ul>
-        <li v-if="!only || only.length==0 || only.indexOf('insert')>-1" @click="$emit('replyAct','insert')">Insert</li>
-        <li v-if="!only || only.length==0 || only.indexOf('delete')>-1" @click="$emit('replyAct','delete')">Delete</li>
+        <li v-if="(!only || only.length==0 || only.indexOf('insert')>-1) && (!except || except.length==0 || except.indexOf('insert')==-1)" @click="$emit('replyAct','insert')">Insert</li>
+        <li v-if="(!only || only.length==0 || only.indexOf('delete')>-1) && (!except || except.length==0 || except.indexOf('delete')==-1)" @click="$emit('replyAct','delete')">Delete</li>
         <li v-if="
-          (!only || only.length==0 || only.indexOf('moveTop')>-1) 
+          ((!only || only.length==0 || only.indexOf('moveTop')>-1) && (!except || except.length==0 || except.indexOf('moveTop')==-1))
           && data_index != 0 && data.length > 0" 
           @click="moveTop()">Move Top</li>
         <li v-if="
-          (!only || only.length==0 || only.indexOf('moveBottom')>-1)
+          ((!only || only.length==0 || only.indexOf('moveBottom')>-1) && (!except || except.length==0 || except.indexOf('moveBottom'))==-1)
           && data_index != data.length - 1 && data.length > 0" 
           @click="moveBottom()">Move Bottom</li>
       </ul>
@@ -36,6 +36,10 @@ const props = defineProps({
     required: true,
   },
   only: {
+    type: Object,
+    // required: true,
+  },
+  except: {
     type: Object,
     // required: true,
   },

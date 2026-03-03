@@ -16,23 +16,47 @@ const { show, status, message, permit_close } = storeToRefs(useAlertStore());
 //         }
 //     });
 // }
+let timeoutClickList: null | ReturnType<typeof setTimeout>  = null;
+
+watch(()=>show.value,(newVal, oldVal) => {
+    if(newVal){
+        if(timeoutClickList) {
+            clearTimeout(timeoutClickList)
+            timeoutClickList = null;
+        };
+        timeoutClickList = setTimeout(()=>{
+            show.value = false;
+        },5000);
+    }else{
+        if(timeoutClickList) {
+            clearTimeout(timeoutClickList);
+            timeoutClickList = null;
+        }
+    }
+}, {
+  deep:true,
+  immediate: true
+});
+
 </script>
 <template>
-    <div id="alert" class="fixed w-full h-14 bottom-0 text-white p-1 border-t-2 border-slate-700 z-20" :class="status=='Failed'?'bg-red-800 ':'bg-slate-800 '"
+    <div id="alert" class="fixed top-0 right-0 text-white p-2 z-20" 
         v-show="show">
-        <div class="h-full flex flex-row flex-wrap overflow-auto">
-            <div class="flex flex-col flex-grow">
-                <ClientOnly>
-                    <strong>
-                        {{ status }}
-                    </strong>
-                    <small>
-                        {{ message }}
-                    </small>
-                </ClientOnly>
-            </div>
-            <div class="flex items-center justify-center" @click="show = false">
-                <IconsTimes class="text-2xl cursor-pointer" />
+        <div class="min-h-14 max-h-80 border-t-2 border-slate-700 rounded-lg " :class="status=='Failed'?'bg-red-800 ':'bg-slate-800 '">
+            <div class="h-full flex flex-row flex-wrap overflow-auto p-2">
+                <div class="flex flex-col flex-grow ">
+                    <ClientOnly>
+                        <strong>
+                            {{ status }}
+                        </strong>
+                        <small>
+                            {{ message }}
+                        </small>
+                    </ClientOnly>
+                </div>
+                <div class="flex items-center justify-center" @click="show = false">
+                    <IconsTimes class="text-2xl cursor-pointer" />
+                </div>
             </div>
         </div>
     </div>

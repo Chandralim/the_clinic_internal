@@ -16,16 +16,21 @@
           Data yang akan dihapus <b>tidak dapat dikembalikan lagi</b>, yakin untuk menghapus data ini ?        
         </div>
       </div>
-
-      <div class="w-full text-left mt-3" >
+      <div v-if="data.length > 0 || info_type=='custome' || !Array.isArray(data)" class="w-full text-left mt-3" >
         <b class="text-gray-600" >Data Information :</b>
         <div v-if="info_type=='custome'" class="w-full border-solid border-2 border-black p-1 capitalize bg-slate-800 text-white text-center">
           <slot name="info"></slot> 
         </div>
-        <table v-else class="w-full border-solid border-2 border-black ">
+        <table v-if="data.length > 0" class="w-full border-solid border-2 border-black ">
           <tr v-for="(v, k) in data">
             <td class="border-solid border-2 border-black p-1 capitalize bg-slate-800 text-white text-right">{{ k }}</td>
             <td class="border-solid border-2 border-black p-1 text-left">{{ v }}</td>
+          </tr>
+        </table>
+        <table v-if="!Array.isArray(data)" class="w-full border-solid border-2 border-black ">
+          <tr v-for="(v, k) in Object.keys(data)">
+            <td class="border-solid border-2 border-black p-1 capitalize bg-slate-800 text-white text-right">{{ v }}</td>
+            <td class="border-solid border-2 border-black p-1 text-left">{{ data[v] }}</td>
           </tr>
         </table>
       </div>
@@ -58,7 +63,7 @@ const props = defineProps({
   data: {
     type: Object,
     required: false,
-    default: '',
+    default: {},
   },
   fnClose: {
     type: Function,

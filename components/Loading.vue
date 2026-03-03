@@ -18,7 +18,7 @@ const { loading_full } = storeToRefs(useCommonStore());
 // }
 </script>
 <template>
-    <div class="fixed z-10 w-full h-full bg-slate-300 top-0 flex items-center justify-center text-4xl bg-opacity-90"
+    <div class="fixed z-30 w-full h-full bg-slate-300 top-0 flex items-center justify-center text-4xl bg-opacity-90"
         v-show="loading_full">
         <IconsLoading />
     </div>

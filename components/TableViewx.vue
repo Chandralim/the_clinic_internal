@@ -3,17 +3,17 @@
   <div class="w-full flex justify-center items-center grow h-0 pb-1 px-1 flex-col">
     <div class="w-full flex justify-end">
       <div class="w-6/12 p-1 sm:w-4/12 md:w-3/12 lg:w-3/12 flex flex-col">
-        <input class="flex-grow" type="text" v-model="global_keyword" name="search"
-          placeholder="Keyword" @keyup.enter="doFilter()">
+        <input class="flex-grow" type="text" ref="ref_keyword" v-model="global_keyword" name="search"
+          placeholder="Keyword" @keyup.enter="doFilter()" @keyup="autoSearchKeyword()">
       </div>
-      <button type="button" name="button" aria-label="Search" class="m-1 text-2xl " @click="doFilter()">
+      <button type="button" name="button" class="m-1 text-2xl " @click="doFilter()">
         <IconsSearch />
       </button>
-      <button type="button" aria-label="Filter Form"  name="button" class="m-1 text-2xl "
+      <button type="button" name="button" class="m-1 text-2xl "
         @click="_tv.filter_box=!_tv.filter_box">
         <IconsAdjust />
       </button>
-      <button type="button" name="button" aria-label="Filter Field"  class="m-1 text-2xl "
+      <button type="button" name="button" class="m-1 text-2xl "
         @click="cogs_show=!cogs_show">
         <IconsTableHeaderEye />
       </button>
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div v-if="_tv.filter_box" class="w-full h-full flex items-center justify-center fixed top-0 left-0 z-20 p-1 text-xs"
+    <div v-if="_tv.filter_box" class="w-full h-full flex items-center justify-center fixed top-0 left-0 z-10 p-1 text-xs"
     style="background-color: rgba(255,255,255,0.9);">
       <div class="relative w-full sm:max-w-[95%]" style="height: 90%;">
         <div class="absolute -top-6 right-0 bg-white"
@@ -104,7 +104,7 @@
                         <option v-if="['number','string'].indexOf(fd.type)>-1" value="less_then">&lt;</option>
                         <option v-if="['number','string'].indexOf(fd.type)>-1" value="less_and">&lt;=</option>
                         <option v-if="['datetime'].indexOf(fd.type)>-1" value="specific">Specific</option>
-                        <option v-if="['date','datetime'].indexOf(fd.type)>-1" value="fullday">Fullday</option>
+                        <option v-if="['date'].indexOf(fd.type)>-1" value="fullday">Fullday</option>
                       </select>
                     </td>
                     <td style="min-width: 180px;">
@@ -122,8 +122,8 @@
                             <vue-date-picker 
                             v-model="filter_model[fd.key]['value_1']" 
                             type="datetime" 
-                            :format="fd.type=='date' || filter_model[fd.key]['operator']=='fullday'?'dd-MM-yyyy':'dd-MM-yyyy HH:mm:ss'"
-                            :enable-time-picker = "fd.type=='datetime' && filter_model[fd.key]['operator']=='specific'" 
+                            :format="fd.type=='date'?'dd-MM-yyyy':'dd-MM-yyyy HH:mm:ss'"
+                            :enable-time-picker = "fd.type == 'datetime'" 
                             text-input
                             teleport-center
                             class="flex-grow"></vue-date-picker>
@@ -137,8 +137,8 @@
                               <vue-date-picker  
                               type="datetime" 
                               v-model="filter_model[fd.key]['value_2']"
-                              :format="fd.type=='date' || filter_model[fd.key]['operator']=='fullday'?'dd-MM-yyyy':'dd-MM-yyyy HH:mm:ss'"
-                              :enable-time-picker = "fd.type=='datetime' && filter_model[fd.key]['operator']=='specific'" 
+                              :format="fd.type=='date'?'dd-MM-yyyy':'dd-MM-yyyy HH:mm:ss'"
+                              :enable-time-picker = "fd.type == 'datetime'" 
                               text-input
                               teleport-center
                               class="flex-grow"></vue-date-picker>
@@ -180,7 +180,7 @@
         Maaf Tidak Ada Record
       </div>
 
-      <div v-else class="w-full h-full overflow-auto" ref="loadRef" @scroll="loadMore">
+      <div v-else class="w-full h-full overflow-auto" role="sticky" ref="loadRef" @scroll="loadMore">
         <table class="tacky">
           <thead  class="sticky top-0 !z-[5]">
             <tr v-for="(ts,idx) in thead_split">
@@ -208,7 +208,7 @@
                       </template>
 
                       <template v-if="tf.dateformat">
-                        {{ tb[tf.key] ? $moment(tb[tf.key]).format(tf.dateformat)  : "" }}
+                        {{ tb[tf.key] ? $parseDate(tb[tf.key]).toFormat(tf.dateformat)  : "" }}
                       </template>
                       <template v-else>
                         {{ tb[tf.key] ? checkType(tb[tf.key],tf.type)  : "" }}
@@ -269,55 +269,65 @@ const { _tv } = storeToRefs(useCommonStore()); // make authenticated state react
 
 
 const props = defineProps({
-    title: {
-        type: String, // Define the prop type
-        required: false, // Specify if the prop is required
-        default: 'Header Info', // Set a default value for the prop
-    },
-    thead:{
-        type: Array, 
-        required: true,
-        default: [],
-    },
-    tbody:{
-        type: Array, 
-        required: false,
-        default: [],
-    },
-    selected:{
-      type:Number,
-      required:false,
-      default:-1
-    },
-    scrolling:{
-      type:Object,
-      required:false,
-      default:{
-        page: 1,
-        is_last_record: false,
-        scrollLeft: 0,
-        may_get_data: true
-      }
-    },
-    fnCallData:{
-      type:Function,
-      required:true,
-    },
-    loadDataType:{
-      type:String,
-      required:false,
-      default:"scroll"
-    },
-    rowBgColor:{
-      type:Function,
-      required:false,
-      default:null
-    },
-    deep_state:{
-      type:Object,
-      required:false,
-      default:{}
-    },
+  title: {
+      type: String, // Define the prop type
+      required: false, // Specify if the prop is required
+      default: 'Header Info', // Set a default value for the prop
+  },
+  thead:{
+      type: Array, 
+      required: true,
+      default: [],
+  },
+  tbody:{
+      type: Array, 
+      required: false,
+      default: [],
+  },
+  selected:{
+    type:Number,
+    required:false,
+    default:-1
+  },
+  scrolling:{
+    type:Object,
+    required:false,
+    default:{
+      page: 1,
+      is_last_record: false,
+      scrollLeft: 0,
+      may_get_data: true
+    }
+  },
+  fnCallData:{
+    type:Function,
+    required:true,
+  },
+  loadDataType:{
+    type:String,
+    required:false,
+    default:"scroll"
+  },
+  rowBgColor:{
+    type:Function,
+    required:false,
+    default:null
+  },
+  deep_state:{
+    type:Object,
+    required:false,
+    default:{}
+  },
+  triggerFirst:{
+    type:Boolean,
+    required:false,
+    default:false
+  },
+  frmName: {
+    type: String,
+    required: true,
+    default:""
+  }
 });
 
 const tbody_fields = ref([]);
@@ -745,7 +755,7 @@ const paginateToPage=async(page)=>{
 }
 
 const filter_model=ref({});
-useCommonStore()._tv.filter_model = filter_model;
+useCommonStore()._tv.filter_model[props.frmName] = filter_model;
 // filter_model.value.all_key =tbody_fields.value.map((x)=>x.key);
 const sort_priority = ref(JSON.parse(JSON.stringify(tbody_fields.value.map((x,k)=>(k+1).toString()))));
 tbody_fields.value.forEach((z,k)=>{
@@ -824,7 +834,7 @@ const clearAllFields=()=>{
 }
 
 const global_keyword=ref("");
-useCommonStore()._tv.global_keyword = global_keyword;
+useCommonStore()._tv.global_keyword[props.frmName] = global_keyword;
 
 
 const checkbox_arr = ref([]);
@@ -838,7 +848,27 @@ const checkbox_set = ($val)=>{
   }
   emit('setCheckbox',checkbox_arr.value );
 }
-// for example
+
+
+
+const ref_keyword = ref(null);
+let autoSearchKeywordTimeout  = null;
+
+const autoSearchKeyword= (val)=>{
+  if(autoSearchKeywordTimeout) clearTimeout(autoSearchKeywordTimeout);
+  autoSearchKeywordTimeout = setTimeout(()=>{
+    doFilter()
+  },500);
+};
+
+watch(()=>props.triggerFirst,(newVal, oldVal) => {
+  if(ref_keyword.value){
+    ref_keyword.value.focus();
+  }
+}, {
+  // deep:true,
+  // immediate: true
+});// for example
 // const fields_thead=ref([
 //   {key:"status",label:"Status"},
 //   {key:"app1",label:"App 1"},
