@@ -3,7 +3,7 @@ import { useErrorStore } from '~/store/error';
 import { useCommonStore } from '~/store/common';
 
 interface UserPayloadInterface {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', {
     // loading_full: false,
   }),
   actions: {
-    async authenticateUser({ username, password }: UserPayloadInterface) {
+    async authenticateUser({ email, password }: UserPayloadInterface) {
       return new Promise<any>(async (resolve, reject) => {
 
         const { data, error, status, pending }: any = useMyLazyFetch('/login', {
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('auth', {
             // 'Content-Type': 'application/json'
           },
           body: {
-            username,
+            email,
             password,
           },
           timeout: 1000,
@@ -106,8 +106,8 @@ export const useAuthStore = defineStore('auth', {
         } else {
 
           if (data.value) {
-            const username = useCookie('username'); // useCookie new hook in nuxt 3
-            username.value = data?.value?.user?.username; // set token to cookie
+            const email = useCookie('email'); // useCookie new hook in nuxt 3
+            email.value = data?.value?.user?.email; // set token to cookie
 
             const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
             fullname.value = data?.value?.user?.fullname; // set token to cookie
@@ -174,8 +174,8 @@ export const useAuthStore = defineStore('auth', {
       const token = useCookie('token'); // useCookie new hook in nuxt 3
       token.value = null; // clear the token cookie
 
-      const username = useCookie('username'); // useCookie new hook in nuxt 3
-      username.value = null; // set token to cookie
+      const email = useCookie('email'); // useCookie new hook in nuxt 3
+      email.value = null; // set token to cookie
 
       const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
       fullname.value = null; // set token to cookie

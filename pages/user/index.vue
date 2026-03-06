@@ -83,7 +83,7 @@ const rowBgColor=(data)=>{
 const filter_status = ref("active")
 watch(()=>filter_status.value,(newval)=>{
   // fields_thead.value.map((x)=>{
-  //   let in_list=["deleted_by_username","deleted_at","deleted_reason"].indexOf(x.key) > -1;
+  //   let in_list=["deleted_by_email","deleted_at","deleted_reason"].indexOf(x.key) > -1;
   //   if(["all","deleted"].indexOf(newval) > -1){
   //     if( in_list )
   //       x.tbl_show =  1; 
@@ -147,7 +147,7 @@ const inject_params = () => {
   params.like = "";
   let words = JSON.parse(JSON.stringify(useCommonStore()._tv.global_keyword[frmName]));
   if (words != "") {
-    params.like = `id:%${words}%,username:%${words}%`;
+    params.like = `id:%${words}%,email:%${words}%`;
   }
   params.sort = "";
   if (sort.value.field) {
@@ -337,13 +337,13 @@ const confirmed_delete = async() => {
 const fields_thead=ref([
   {key:"no",label:"No",isai:true},
   {key:"id",label:"ID",filter_on:1,type:"number"},
-  {key:"username",label:"Username",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
+  {key:"email",label:"Email",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
   {key:"role",label:"Hak Akses",filter_on:1,type:'string'},
   {key:"group",label:"Group",filter_on:1,type:'string'},
   {key:"is_active",label:"Status",filter_on:1,type:"select",select_item:[{k:'1',v:'Ya'},{k:'0',v:'Tidak'}]},
   {key:"utc_created_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
   {key:"utc_updated_at",label:"Updated At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
-  // {key:"deleted_by_username",label:"Deleted By",tbl_show:1},
+  // {key:"deleted_by_email",label:"Deleted By",tbl_show:1},
   // {key:"deleted_at",label:"Deleted At",type:'datetime',dateformat:"DD-MM-Y HH:mm:ss",filter_on:1, tbl_show:1},
   // {key:"deleted_reason",label:"Deleted Reason", tbl_show:1,type:'string',filter_on:1},
 ]);
