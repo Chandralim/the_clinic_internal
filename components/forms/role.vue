@@ -9,7 +9,7 @@
             <div class="w-full flex flex-row flex-wrap">
               <div class="w-full flex flex-col flex-wrap p-1">
                 <label for="">Name</label>
-                <input v-model="permission_group.name">
+                <input v-model="role.name">
                 <p class="text-red-500">{{ field_errors.name }}</p>
               </div>
             </div>
@@ -160,12 +160,12 @@ const props = defineProps({
   
 })
 
-const permission_group_temp = {
+const role_temp = {
     name: "",
     list: [],
 };
 
-const permission_group = ref({...permission_group_temp});
+const role = ref({...role_temp});
 const token = useCookie('token');
 const field_errors = ref({})
 
@@ -174,7 +174,7 @@ const doSave = async () => {
   field_errors.value = {};
 
   const data_in = new FormData();
-  data_in.append("name", permission_group.value.name);
+  data_in.append("name", role.value.name);
   data_in.append("permission_list", JSON.stringify(permission_list_checked.value));
   data_in.append("users", JSON.stringify(users_checked.value));
 
@@ -188,7 +188,7 @@ const doSave = async () => {
     data_in.append("_method", "PUT");
   }
 
-  const { data, error, status } = await useMyFetch("/permission_group", {
+  const { data, error, status } = await useMyFetch("/role", {
     method: $method,
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -204,16 +204,16 @@ const doSave = async () => {
   }
 
   if(id<=0){
-    permission_group.value.id = data.value.id;
-    permission_group.value.created_at = data.value.created_at;
-    permission_group.value.updated_at = data.value.updated_at;
-    props.p_data.unshift(permission_group.value);
+    role.value.id = data.value.id;
+    role.value.created_at = data.value.created_at;
+    role.value.updated_at = data.value.updated_at;
+    props.p_data.unshift(role.value);
   }else{
-    permission_group.value.updated_at = data.value.updated_at;
+    role.value.updated_at = data.value.updated_at;
 
     let idx= props.p_data.map((x)=>x.id).indexOf(id);
     if(idx>=-1){
-      props.p_data.splice(idx,1,{...permission_group.value});    
+      props.p_data.splice(idx,1,{...role.value});    
     }
   }
   props.fnClose();
@@ -221,7 +221,7 @@ const doSave = async () => {
 
 const callData = async () => {
   useCommonStore().loading_full = true;
-  const { data, error, status } = await useMyFetch("/permission_group", {
+  const { data, error, status } = await useMyFetch("/role", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -242,13 +242,13 @@ const callData = async () => {
     return;
   }
 
-  permission_group.value = data.value.data;
+  role.value = data.value.data;
 
   let p_status = "Edit";
   if(props.is_copy){
     p_status = "Add";
-    permission_group.value.val = 0;
-    permission_group.value.val1 = 0;
+    role.value.val = 0;
+    role.value.val1 = 0;
   }
 
   data.value.data.details.forEach((v,k)=>{
@@ -374,7 +374,7 @@ const unChUser=(item)=>{
 
 watch(() => props.show, async(newVal, oldVal) => {
   if (newVal == true){
-    permission_group.value = {...permission_group_temp};
+    role.value = {...role_temp};
     permission_list.value = [];
 
     await callPermissionListData();

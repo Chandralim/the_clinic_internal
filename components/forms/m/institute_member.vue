@@ -184,11 +184,11 @@ const doSave = async () => {
     return;
   }
 
-  m_clinic_member.value.utc_updated_at = data.value.utc_updated_at;
+  m_clinic_member.value.updated_utc_at = data.value.updated_utc_at;
   
   if(props.id<=0){
     m_clinic_member.value.id = data.value.id;
-    m_clinic_member.value.utc_created_at = data.value.utc_created_at;
+    m_clinic_member.value.created_utc_at = data.value.created_utc_at;
     props.p_data.unshift(m_clinic_member.value);
   }else{
     let idx= props.p_data.map((x)=>x.id).indexOf(props.id);
@@ -211,7 +211,7 @@ const callData = async () => {
     },
     params: {id:props.id},
     // body: {
-    //   sort: "utc_updated_at:desc"
+    //   sort: "updated_utc_at:desc"
     // },
     retry: 0,
     // server: true

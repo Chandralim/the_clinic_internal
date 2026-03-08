@@ -119,8 +119,8 @@
               </nuxt-link>
             </li>
 
-            <li v-if="useUtils().checkPermission('permission_group.views')" :class="activeMenu == '/permission_group'?'active':''" >
-              <nuxt-link to="/permission_group"  class="cursor-pointer" @click="goTo('/permission_group')">
+            <li v-if="useUtils().checkPermission('role_permission.views')" :class="activeMenu == '/role_permission'?'active':''" >
+              <nuxt-link to="/role_permission"  class="cursor-pointer" @click="goTo('/role_permission')">
                 <IconsPerson class="mr-1"/>
                 Permission Group
               </nuxt-link>

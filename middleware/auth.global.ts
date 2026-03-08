@@ -25,19 +25,31 @@ export default defineNuxtRouteMiddleware(async (to) => {
     abortNavigation();
     return navigateTo('/login');
   }
-  
-  if(to?.name !== 'login'){
+
+  if (to?.name !== 'login') {
     useCommonStore().loading_full = true;
   }
 
   if (to?.name !== 'login' && done_get_user_info.value == false) {
     const { checkUser } = useAuthStore();
-    checkUser()
-      .then((res) => {
-      }).catch((error) => {
-      })
-      .finally(() => {
-        return;
-      });
+    // checkUser()
+    //   .then((res) => {
+    //   }).catch((error) => {
+    //   })
+    //   .finally(() => {
+    //     // return;
+    //   });    
+    try {
+      // KUNCI UTAMA: Gunakan await di sini agar middleware "menunggu"
+      await checkUser();
+    } catch (error) {
+      console.error("Gagal mengambil data user:", error);
+      // Opsional: Jika gagal ambil user, lempar ke login
+      // return navigateTo('/login');
+    } finally {
+
+    }
   }
+
+
 });

@@ -42,11 +42,11 @@
                   </div>
                   <div class="p-1">
                     <label class="bold text-xs"> Created_at</label>
-                    <div > {{ $DateTime.fromMillis(Number(member.utc_created_at)).toFormat("dd-MM-y HH:mm:ss") }} </div>
+                    <div > {{ $DateTime.fromMillis(Number(member.created_utc_at)).toFormat("dd-MM-y HH:mm:ss") }} </div>
                   </div>
                   <div class="p-1">
                     <label class="bold text-xs"> Updated_at</label>
-                    <div > {{ $DateTime.fromMillis(Number(member.utc_updated_at)).toFormat("dd-MM-y HH:mm:ss") }} </div>
+                    <div > {{ $DateTime.fromMillis(Number(member.updated_utc_at)).toFormat("dd-MM-y HH:mm:ss") }} </div>
                   </div>
                 </div>
               </div>

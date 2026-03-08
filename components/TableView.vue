@@ -208,7 +208,7 @@
                       </template>
 
                       <template v-if="tf.dateformat">
-                        {{ tb[tf.key] ? $moment(tb[tf.key]).format(tf.dateformat)  : "" }}
+                        {{ tb[tf.key] ? $parseDate(tb[tf.key]).toFormat(tf.dateformat)  : "" }}
                       </template>
                       <template v-else>
                         {{ tb[tf.key] ? checkType(tb[tf.key],tf.type)  : "" }}

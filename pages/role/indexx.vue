@@ -1,17 +1,17 @@
 <template>
   <div class="w-full h-full flex flex-col">
-    <Header :title="'List Permission Group'" />
+    <Header :title="'List Role'" />
     <div class="w-full flex grow flex-col overflow-auto h-0">
       <div class="w-full flex">
-        <button v-if="useUtils().checkPermission('permission_group.create')" type="button" name="button" class="m-1 text-2xl "
+        <button v-if="useUtils().checkPermission('role.create')" type="button" name="button" class="m-1 text-2xl "
           @click="form_copy()">
           <IconsCopy />
         </button>
-        <button v-if="useUtils().checkPermission('permission_group.create')" type="button" name="button" class="m-1 text-2xl "
+        <button v-if="useUtils().checkPermission('role.create')" type="button" name="button" class="m-1 text-2xl "
           @click="form_add()">
           <IconsPlus />
         </button>
-        <button v-if="useUtils().checkPermission('permission_group.modify')" type="button" name="button" class="m-1 text-2xl "
+        <button v-if="useUtils().checkPermission('role.modify')" type="button" name="button" class="m-1 text-2xl "
           @click="form_edit()">
           <IconsEdit/>
         </button>
@@ -47,7 +47,7 @@
       </form>
       <div class="w-full flex justify-center items-center grow h-0 p-1">
 
-        <div v-if="permission_groups.length == 0" class="">
+        <div v-if="roles.length == 0" class="">
           Maaf Tidak Ada Record
         </div>
 
@@ -60,17 +60,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(permission_group, index) in permission_groups" :key="index" @click="selected = index"
+              <tr v-for="(role, index) in roles" :key="index" @click="selected = index"
                 :class="selected == index ? 'active' : ''">
-                <td class="bold">{{ permission_group.id }}</td>
-                <td>{{ permission_group.name }}</td>
+                <td class="bold">{{ role.id }}</td>
+                <td>{{ role.name }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <FormsPermissionGroup :show="forms_permission_group_show" :fnClose="()=>{forms_permission_group_show=false}" :id="forms_permission_group_id" :p_data="permission_groups" :is_copy="forms_permission_group_copy"/>  
+    <FormsPermissionGroup :show="forms_role_show" :fnClose="()=>{forms_role_show=false}" :id="forms_role_id" :p_data="roles" :is_copy="forms_role_copy"/>  
   </div>
 </template>
 
@@ -89,7 +89,7 @@ definePageMeta({
   // layout: "clear",
   middleware: [
     function (to, from) {
-      if (!useAuthStore().checkPermission('permission_group.views')) {
+      if (!useAuthStore().checkPermission('role.views')) {
         useCommonStore().loading_full = false;
         return navigateTo('/');
       }
@@ -101,14 +101,14 @@ definePageMeta({
 
 const params = {};
 params._TimeZoneOffset = new Date().getTimezoneOffset();
-params.sort ="utc_created_at:desc";
+params.sort ="created_utc_at:desc";
 
 const token = useCookie('token');
 const { data: dt_async } = await useAsyncData(async () => {
-  let permission_groups = [];
+  let roles = [];
 
   useCommonStore().loading_full = true;
-  const { data, error, status } = await useMyFetch("/permission_groups", {
+  const { data, error, status } = await useMyFetch("/roles", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -120,18 +120,18 @@ const { data: dt_async } = await useAsyncData(async () => {
   useCommonStore().loading_full = false;
   if (status.value === 'error') {
     useErrorStore().trigger(error);
-    return {permission_groups};
+    return {roles};
   }
-  permission_groups = data.value.data;
-  return {permission_groups};
+  roles = data.value.data;
+  return {roles};
 });
 
-const permission_groups = ref(dt_async.value.permission_groups);
+const roles = ref(dt_async.value.roles);
 // const popup_request = ref(false);
 
 const search = ref("");
 const sort = ref({
-  field: "utc_created_at",
+  field: "created_utc_at",
   by: "desc"
 });
 const selected = ref(-1);
@@ -159,12 +159,12 @@ const callData = async () => {
   useCommonStore().loading_full = true;
   scrolling.value.may_get_data = false;
   params.page = scrolling.value.page;
-  if (params.page == 1) permission_groups.value = [];
+  if (params.page == 1) roles.value = [];
   if(params.first_row) delete params.first_row;
   if(params.page > 1){
-    params.first_row = JSON.stringify(permission_groups.value[0]);
+    params.first_row = JSON.stringify(roles.value[0]);
   }
-  const { data, error, status } = await useMyFetch("/permission_groups", {
+  const { data, error, status } = await useMyFetch("/roles", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -182,10 +182,10 @@ const callData = async () => {
   }
 
   if (scrolling.value.page == 1) {
-    permission_groups.value = data.value.data;
+    roles.value = data.value.data;
     if (loadRef.value) loadRef.value.scrollTop = 0;
   } else if (scrolling.value.page > 1) {
-    permission_groups.value = [...permission_groups.value, ...data.value.data];
+    roles.value = [...roles.value, ...data.value.data];
   }
   if (data.value.data.length == 0) {
     scrolling.value.is_last_record = true;
@@ -221,14 +221,14 @@ const searching = () => {
 
 const router = useRouter();
 
-const forms_permission_group_show =  ref(false);
-const forms_permission_group_id = ref(0);
-const forms_permission_group_copy = ref(0);
+const forms_role_show =  ref(false);
+const forms_role_id = ref(0);
+const forms_role_copy = ref(0);
 const form_add = () => {
-  forms_permission_group_id.value = 0;
-  forms_permission_group_show.value = true;
-  forms_permission_group_copy.value = false;
-  // router.push({ name: 'data_permission_group-form', query: { id: "" } });
+  forms_role_id.value = 0;
+  forms_role_show.value = true;
+  forms_role_copy.value = false;
+  // router.push({ name: 'data_role-form', query: { id: "" } });
 }
 
 const { display } = useAlertStore();
@@ -238,10 +238,10 @@ const form_edit = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_permission_group_id.value = permission_groups.value[selected.value].id;
-    forms_permission_group_show.value = true;
-    forms_permission_group_copy.value = false;
-    // router.push({ name: 'data_permission_group-form', query: { id: permission_groups.value[selected.value].id } });
+    forms_role_id.value = roles.value[selected.value].id;
+    forms_role_show.value = true;
+    forms_role_copy.value = false;
+    // router.push({ name: 'data_role-form', query: { id: roles.value[selected.value].id } });
   }
 };
 
@@ -249,87 +249,11 @@ const form_copy = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_permission_group_id.value = permission_groups.value[selected.value].id;
-    forms_permission_group_show.value = true;
-    forms_permission_group_copy.value = true;
+    forms_role_id.value = roles.value[selected.value].id;
+    forms_role_show.value = true;
+    forms_role_copy.value = true;
     // router.push({ name: 'data_trx_trp-form', query: { id: trx_trps.value[selected.value].id } });
   }
 };
 
-const forms_permission_group_valid_show =  ref(false);
-const forms_permission_group_valid_id = ref(0);
-const forms_trx_trp_is_view = ref(false);
-const validasi = () => {
-  if (selected.value == -1) {
-    display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
-  } else {
-    forms_permission_group_valid_id.value = permission_groups.value[selected.value].id;
-    forms_permission_group_valid_show.value = true;
-    forms_trx_trp_is_view.value = false;
-  }
-};
-
-const form_view = () => {
-  if (selected.value == -1) {
-    display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
-  } else {
-    forms_permission_group_valid_id.value = permission_groups.value[selected.value].id;
-    forms_permission_group_valid_show.value = true;
-    forms_trx_trp_is_view.value = true;
-  }
-};
-
-const enabledOk = ref(false);
-const delete_data = ref({});
-const delete_box = ref(false);
-const deleted_reason = ref("");
-const toggleDeleteBox = async()=>{  
-  if (delete_box.value) {
-    delete_box.value = false;
-  }
-};
-
-const remove = () => {
-  if (selected.value == -1) {
-    display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
-  } else {
-    deleted_reason.value = '';
-    delete_data.value = {id : permission_groups.value[selected.value].id};
-    delete_box.value = true;
-  }
-};
-
-watch(()=>deleted_reason.value,(newval)=>{
-  if( newval.trim().length > 0 ) enabledOk.value = true;
-  else enabledOk.value = false;
-}, {
-  immediate: false
-})
-
-const confirmed_delete = async() => {
-  useCommonStore().loading_full = true;
-
-  const data_in = new FormData();
-  data_in.append("id", permission_groups.value[selected.value].id);
-  data_in.append("deleted_reason", deleted_reason.value);  
-  data_in.append("_method", "DELETE");
-
-  const { data, error, status } = await useMyFetch("/permission_group", {
-    method: "post",
-    headers: {
-      'Authorization': `Bearer ${token.value}`,
-      'Accept': 'application/json',
-    },
-    body: data_in,
-    retry: 0,
-  });
-  useCommonStore().loading_full = false;
-  if (status.value === 'error') {
-    useErrorStore().trigger(error);
-    return;
-  }
-  permission_groups.value.splice(selected.value,1);
-  selected.value = -1;
-  delete_box.value = false;
-}
 </script>

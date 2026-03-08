@@ -1,6 +1,6 @@
 <template>
     <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0" :class="ispop ?'fixed':'relative'">
-        <HeaderPopup v-if="ispop" :title="'Form User'" :fn="fnClose" class="w-100 flex align-items-center"
+        <HeaderPopup v-if="ispop" :title="'Form Role'" :fn="fnClose" class="w-100 flex align-items-center"
         style="color:white;" />
         <div class="w-full flex grow flex-col overflow-auto h-0">
             <div class="w-full flex justify-between flex-wrap">
@@ -29,34 +29,23 @@
                 @click="form_view()">
                 <IconsEyes/>
               </button> -->
-              <button  v-if="enabled_remove" type="button" name="button" class="m-1 text-2xl "
+              <!-- <button  v-if="enabled_remove" type="button" name="button" class="m-1 text-2xl "
                 @click="remove()">
                 <IconsDelete />
-              </button>
+              </button> -->
             </div>
           </div>
-          <TableView :thead="fields_thead" :selected="selected" @setSelected="selected = $event" :tbody="m_users" :fnCallData="callData" :scrolling="scrolling" @setScrollingPage="scrolling.page=$event"  @doFilter="searching()" :rowBgColor="rowBgColor" :frmName="frmName">
+          <TableView :thead="fields_thead" :selected="selected" @setSelected="selected = $event" :tbody="roles" :fnCallData="callData" :scrolling="scrolling" @setScrollingPage="scrolling.page=$event"  @doFilter="searching()" :rowBgColor="rowBgColor" :frmName="frmName">
             <!-- <template #[`group`]="{item}">
               {{ name_of_groups(item) }}
-            </template> -->
+            </template>
             <template #[`is_active`]="{item}">
               {{ item.is_active==1 ? "Aktif" : "Tidak Aktif" }}
-            </template>
-
-            <template #[`photo`]="{item}">
-              <img class="max-h-[50px]" :src="useUtils().imgloc(item.photo_location)"/>
-            </template>
-
-            <template #[`clinic_code`]="{item}">
-              {{item.clinic?.code}}
-            </template>
-            <template #[`clinic_name`]="{item}">
-              {{item.clinic?.name}}
-            </template>
+            </template> -->
             
           </TableView>
         </div>
-      <PopupMini :type="'delete'" :show="delete_box" :data="delete_data" :fnClose="toggleDeleteBox"
+      <!-- <PopupMini :type="'delete'" :show="delete_box" :data="delete_data" :fnClose="toggleDeleteBox"
         :fnConfirm="confirmed_delete" :enabledOk="enabledOk">
         <template #footer>
           Masukkan Alasan Penghapusan:
@@ -64,16 +53,22 @@
             <textarea v-model="deleted_reason"></textarea>
           </div>
         </template>
-      </PopupMini>
-      <FormsMUser :show="forms_m_user_show" :fnClose="() => { forms_m_user_show = false }"
-        :id="forms_m_user_id" :p_data="m_users" />
-        <div v-if="ispop && selected>-1 && m_users[selected].is_active" class="w-full flex justify-end p-2">
-          <button @click="selectRow()" class=" bg-blue-600 text-white">
-            Select
-          </button>
-        </div>
+      </PopupMini> -->
+      <!-- <FormsUser :show="forms_role_show" :fnClose="() => { forms_role_show = false }"
+        :id="forms_role_id" :p_data="roles" /> -->
+      <FormsRole :show="forms_role_show" :fnClose="()=>{forms_role_show=false}" :id="forms_role_id" :p_data="roles" :is_copy="forms_role_copy"/>  
+      
+      <!-- <PopupMini :type="'delete'" :show="delete_box" :data="delete_data" :fnClose="toggleDeleteBox" :fnConfirm="confirmed_delete" />
+      <FormsUser :show="forms_role_show" :fnClose="()=>{forms_role_show=false}" :id="forms_role_id" :p_data="roles"/> -->
+
+      
+      <div v-if="ispop && selected>-1 && roles[selected].is_active" class="w-full flex justify-end p-2">
+        <button @click="selectRow()" class=" bg-blue-600 text-white">
+          Select
+        </button>
+      </div>
     </div>
-  <!-- <FormsuserValidasi :show="forms_m_user_valid_show" :fnClose="()=>{forms_m_user_valid_show=false}" :id="forms_m_user_valid_id" :p_data="m_users"/> -->
+  <!-- <FormsclinicValidasi :show="forms_role_valid_show" :fnClose="()=>{forms_role_valid_show=false}" :id="forms_role_valid_id" :p_data="roles"/> -->
 
 </template>
 
@@ -89,7 +84,7 @@ import { useAlertStore } from '~/store/alert';
 //   // layout: "clear",
 //   middleware: [
 //     function (to, from) {
-//       if (!useAuthStore().checkPermission('m_user.views')) {
+//       if (!useAuthStore().checkPermission('role.views')) {
 //         useCommonStore().loading_full = false;
 //         return navigateTo('/');
 //       }
@@ -114,17 +109,17 @@ const props = defineProps({
     required: false,
   },
 })
-const frmName = 'fullmuser';
+const frmName = 'fullrole';
 const emit = defineEmits(['selectedList']);
 
 const selectRow = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
-  } else if (m_users.value[selected.value].is_active != 1) {
+  } else if (roles.value[selected.value].is_active != 1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Yang Aktif" });
   }
   else {
-    emit('selectedList', m_users.value[selected.value]);
+    emit('selectedList', roles.value[selected.value]);
     props.fnClose();
   }
 }
@@ -140,7 +135,7 @@ const rowBgColor=(data)=>{
 const filter_status = ref("active")
 watch(()=>filter_status.value,(newval)=>{
   // fields_thead.value.map((x)=>{
-  //   let in_list=["deleted_by_username","deleted_at","deleted_reason"].indexOf(x.key) > -1;
+  //   let in_list=["deleted_by_rolename","deleted_at","deleted_reason"].indexOf(x.key) > -1;
   //   if(["all","deleted"].indexOf(newval) > -1){
   //     if( in_list )
   //       x.tbl_show =  1; 
@@ -162,10 +157,10 @@ params._TimeZoneOffset = new Date().getTimezoneOffset();
 
 
 const token = useCookie('token');
-const { data: m_users } = await useAsyncData(async () => {
+const { data: roles } = await useAsyncData(async () => {
     if (props.ispop) return;
   useCommonStore().loading_full = true;
-  const { data, error, status } = await useMyFetch("/m_users", {
+  const { data, error, status } = await useMyFetch("/roles", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -199,7 +194,7 @@ const scrolling = ref({
 });
 
 const dt_selected = computed(()=>{  
-  return m_users.value[selected.value];
+  return roles.value[selected.value];
 })
 
 
@@ -208,7 +203,7 @@ const inject_params = () => {
   // console.log("globalkey",useCommonStore()._tv.global_keyword);
   let words = JSON.parse(JSON.stringify(useCommonStore()._tv.global_keyword[frmName]));
   if (words != "") {
-    params.like = `id:%${words}%,user_name:%${words}%`;
+    params.like = `id:%${words}%,name:%${words}%`;
   }
   params.sort = "";
   if (sort.value.field) {
@@ -224,10 +219,10 @@ const callData = async () => {
   useCommonStore().loading_full = true;
   scrolling.value.may_get_data = false;
   params.page = scrolling.value.page;
-  if (params.page == 1) m_users.value = [];
+  if (params.page == 1) roles.value = [];
   params.filter_status = filter_status.value;
 
-  const { data, error, status } = await useMyFetch("/m_users", {
+  const { data, error, status } = await useMyFetch("/roles", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -250,10 +245,10 @@ const callData = async () => {
   }
 
   if (scrolling.value.page == 1) {
-    m_users.value = data.value.data;
+    roles.value = data.value.data;
     if (loadRef.value) loadRef.value.scrollTop = 0;
   } else if (scrolling.value.page > 1) {
-    m_users.value = [...m_users.value, ...data.value.data];
+    roles.value = [...roles.value, ...data.value.data];
   }
   if (data.value.data.length == 0) {
     scrolling.value.is_last_record = true;
@@ -292,15 +287,15 @@ const searching = () => {
 
 const router = useRouter();
 
-const forms_m_user_show = ref(false);
-const forms_m_user_id = ref(0);
-const forms_m_user_copy = ref(0);
-const forms_m_user_is_view = ref(false)
+const forms_role_show = ref(false);
+const forms_role_id = ref(0);
+const forms_role_copy = ref(0);
+const forms_role_is_view = ref(false)
 const form_add = () => {
-  forms_m_user_id.value = 0;
-  forms_m_user_is_view.value = false;
-  forms_m_user_copy.value = false;
-  forms_m_user_show.value = true;
+  forms_role_id.value = 0;
+  forms_role_is_view.value = false;
+  forms_role_copy.value = false;
+  forms_role_show.value = true;
 }
 
 const { display } = useAlertStore();
@@ -310,10 +305,10 @@ const form_edit = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_m_user_id.value = m_users.value[selected.value].id;
-    forms_m_user_is_view.value = false;
-    forms_m_user_copy.value = false;
-    forms_m_user_show.value = true;
+    forms_role_id.value = roles.value[selected.value].id;
+    forms_role_is_view.value = false;
+    forms_role_copy.value = false;
+    forms_role_show.value = true;
   }
 };
 
@@ -321,22 +316,22 @@ const form_copy = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_m_user_id.value = m_users.value[selected.value].id;
-    forms_m_user_is_view.value = false;
-    forms_m_user_copy.value = true;
-    forms_m_user_show.value = true;
+    forms_role_id.value = roles.value[selected.value].id;
+    forms_role_is_view.value = false;
+    forms_role_copy.value = true;
+    forms_role_show.value = true;
     // router.push({ name: 'data_trx_trp-form', query: { id: trx_trps.value[selected.value].id } });
   }
 };
 
-const forms_m_user_valid_show = ref(false);
-const forms_m_user_valid_id = ref(0);
+const forms_role_valid_show = ref(false);
+const forms_role_valid_id = ref(0);
 const validasi = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_m_user_valid_id.value = m_users.value[selected.value].id;
-    forms_m_user_valid_show.value = true;
+    forms_role_valid_id.value = roles.value[selected.value].id;
+    forms_role_valid_show.value = true;
   }
 };
 
@@ -355,7 +350,7 @@ const remove = () => {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
     deleted_reason.value = '';
-    delete_data.value = { id: m_users.value[selected.value].id };
+    delete_data.value = { id: roles.value[selected.value].id };
     delete_box.value = true;
   }
 };
@@ -371,11 +366,11 @@ const confirmed_delete = async () => {
   useCommonStore().loading_full = true;
 
   const data_in = new FormData();
-  data_in.append("id", m_users.value[selected.value].id);
+  data_in.append("id", roles.value[selected.value].id);
   data_in.append("deleted_reason", deleted_reason.value);
   data_in.append("_method", "DELETE");
 
-  const { data, error, status } = await useMyFetch("/m_user", {
+  const { data, error, status } = await useMyFetch("/role", {
     method: "post",
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -389,16 +384,16 @@ const confirmed_delete = async () => {
     useErrorStore().trigger(error);
     return;
   }
-  let old = {...m_users.value[selected.value]};
+  let old = {...roles.value[selected.value]};
   old['deleted'] = data.value.deleted;
-  old['deleted_user'] = data.value.deleted_user;
+  old['deleted_role'] = data.value.deleted_role;
   old['deleted_at'] = data.value.deleted_at;
   old['deleted_by'] = data.value.deleted_by;
   old['deleted_reason'] = data.value.deleted_reason;
   if(filter_status.value!='all'){
-    m_users.value.splice(selected.value,1);
+    roles.value.splice(selected.value,1);
   }else{
-    m_users.value.splice(selected.value,1,{...old});
+    roles.value.splice(selected.value,1,{...old});
   }
 
   selected.value = -1;
@@ -409,53 +404,46 @@ const confirmed_delete = async () => {
 
 const fields_thead=ref([
   {key:"no",label:"No",isai:true},
-  {key:"id",label:"ID",filter_on:1,type:"number"},
-  {key:"full_name",label:"Fullname",freeze:0, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
-  // {key:"birth_date",label:"Birthdate",type:'datetime',dateformat:"dd-MM-y",filter_on:1},
-  // {key:"birth_place",label:"Birthplace",filter_on:1,type:'string'},
-  // {key:"photo",label:"Photo",filter_on:0,type:'string'},
-  {key:"email", label: "Email", freeze: 0, filter_on: 1, type: 'string', sort: { priority: 2, type: "asc" } },
-  // {key:"email",label:"Email",filter_on:1,type:'string'},
-  // {key:"phone_number",label:"Phone Number",filter_on:1,type:'string'},
-  // {key:"whatsapp_number",label:"Whatsapp Number",filter_on:1,type:'string'},
-  // {key:"role",label:"Role",filter_on:1,type:'string'},
-  {key:"clinic",label:"Clinic",childs:[
-    {key:"clinic_code",label:"Code",type:'string', class:" justify-start",filter_on:1},
-    {key:"clinic_name",label:"Name",filter_on:1,type:'string'},
-  ]
-  },
-  { key: "is_active", label: "Status", filter_on: 1, type: "select", select_item: [{ k: '1', v: 'Ya' }, { k: '0', v: 'Tidak' }] },
+  { key: "id", label: "ID", filter_on: 1, type: "number" },
+  {key:"name",label:"Nama",filter_on:1,type:'string'},
+  
+  // {key:"email",label:"Email",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
+  // {key:"group",label:"Group",filter_on:1,type:'string'},
+  // {key:"is_active",label:"Status",filter_on:1,type:"select",select_item:[{k:'1',v:'Ya'},{k:'0',v:'Tidak'}]},
   {key:"created_utc_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
   {key:"updated_utc_at",label:"Updated At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
+  // {key:"deleted_by_email",label:"Deleted By",tbl_show:1},
+  // {key:"deleted_at",label:"Deleted At",type:'datetime',dateformat:"DD-MM-Y HH:mm:ss",filter_on:1, tbl_show:1},
+  // {key:"deleted_reason",label:"Deleted Reason", tbl_show:1,type:'string',filter_on:1},
 ]);
 
 const enabled_copy = computed(()=>{  
   let result = selected.value > -1 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1
-  && useUtils().checkPermission('m_user.create');
+  && useUtils().checkPermission('role.create');
   return result;
 })
 
 const enabled_add = computed(()=>{  
   let result = ['active','nonactive','all'].indexOf(filter_status.value) > -1  
-  && useUtils().checkPermission('m_user.create');
+  && useUtils().checkPermission('role.create');
   return result;
 })
 
 const enabled_edit = computed(()=>{  
   let result = selected.value > -1 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1
-  && useUtils().checkPermissions(['m_user.modify']);
+  && useUtils().checkPermissions(['role.modify']);
   return result;
 })
 
 
-const enabled_remove = computed(()=>{  
-  let result = selected.value > -1
-  && useUtils().checkPermission('m_user.remove') 
-  && [undefined,0].indexOf(dt_selected.value.deleted) > -1;
-  return result;
-})
+// const enabled_remove = computed(()=>{  
+//   let result = selected.value > -1
+//   && useUtils().checkPermission('role.remove') 
+//   && [undefined,0].indexOf(dt_selected.value.deleted) > -1;
+//   return result;
+// })
 
 
 watch(() => props.showpop, async(newVal, oldVal) => {
@@ -465,6 +453,7 @@ watch(() => props.showpop, async(newVal, oldVal) => {
 }, {
   immediate: true
 });
+
 </script>
 
 <style scoped="">
