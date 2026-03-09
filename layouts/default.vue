@@ -44,7 +44,7 @@
               </nuxt-link>
             </div>
             <div class="bg-slate-700 bg-opacity-80 p-2 cursor-pointer" @click="is_panel_open = !is_panel_open">
-              {{ username }}
+              {{ fullname }}
             </div>
           </div>
         </header>
@@ -134,7 +134,7 @@ const { logUserOut } = useAuthStore();
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive
 const { triggerSidebar } = useCommonStore(); // make authenticated state reactive
 const { is_sidebar_open } = storeToRefs(useCommonStore()); // make authenticated state reactive
-const token = useDynamicPathCookie('token');
+const token = useCookie('token');
 
 const logout = async() => {
   useCommonStore().loading_full = true;
@@ -156,11 +156,11 @@ const logout = async() => {
 
 };
 
-const company_name  = useDynamicPathCookie('company_name'); // useCookie new hook in nuxt 3
-const company_email = useDynamicPathCookie('company_email'); // useCookie new hook in nuxt 3
+const company_name  = useCookie('company_name'); // useCookie new hook in nuxt 3
+const company_email = useCookie('company_email'); // useCookie new hook in nuxt 3
 
-const username = useDynamicPathCookie('username');
-const fullname = useDynamicPathCookie('fullname');
+// const username = useCookie('username');
+const fullname = useCookie('fullname');
 const is_panel_open = ref(false);
 
 if (process.client) {

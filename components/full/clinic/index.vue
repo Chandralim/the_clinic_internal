@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0" :class="ispop ?'fixed':'relative'">
+    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0 z-10" :class="ispop ?'fixed':'relative'">
         <HeaderPopup v-if="ispop" :title="'Form Clinic'" :fn="fnClose" class="w-100 flex align-items-center"
         style="color:white;" />
         <div class="w-full flex grow flex-col overflow-auto h-0">
@@ -29,13 +29,13 @@
                 @click="form_view()">
                 <IconsEyes/>
               </button> -->
-              <button  v-if="enabled_remove" type="button" name="button" class="m-1 text-2xl "
+              <!-- <button  v-if="enabled_remove" type="button" name="button" class="m-1 text-2xl "
                 @click="remove()">
                 <IconsDelete />
-              </button>
+              </button> -->
             </div>
           </div>
-          <TableView :thead="fields_thead" :selected="selected" @setSelected="selected = $event" :tbody="m_clinics" :fnCallData="callData" :scrolling="scrolling" @setScrollingPage="scrolling.page=$event"  @doFilter="searching()" :rowBgColor="rowBgColor" :frmName="frmName">
+          <TableView :thead="fields_thead" :selected="selected" @setSelected="selected = $event" :tbody="clinics" :fnCallData="callData" :scrolling="scrolling" @setScrollingPage="scrolling.page=$event"  @doFilter="searching()" :rowBgColor="rowBgColor" :frmName="frmName">
             <!-- <template #[`group`]="{item}">
               {{ name_of_groups(item) }}
             </template> -->
@@ -54,15 +54,15 @@
           </div>
         </template>
       </PopupMini>
-      <FormsMClinic :show="forms_m_clinic_show" :fnClose="() => { forms_m_clinic_show = false }"
-        :id="forms_m_clinic_id" :p_data="m_clinics" />
-        <div v-if="ispop && selected>-1 && m_clinics[selected].is_active" class="w-full flex justify-end p-2">
+      <FormsClinic :show="forms_clinic_show" :fnClose="() => { forms_clinic_show = false }"
+        :id="forms_clinic_id" :p_data="clinics" :is_copy="forms_clinic_copy"/>
+        <div v-if="ispop && selected>-1 && clinics[selected].is_active" class="w-full flex justify-end p-2">
           <button @click="selectRow()" class=" bg-blue-600 text-white">
             Select
           </button>
         </div>
     </div>
-  <!-- <FormsclinicValidasi :show="forms_m_clinic_valid_show" :fnClose="()=>{forms_m_clinic_valid_show=false}" :id="forms_m_clinic_valid_id" :p_data="m_clinics"/> -->
+  <!-- <FormsclinicValidasi :show="forms_clinic_valid_show" :fnClose="()=>{forms_clinic_valid_show=false}" :id="forms_clinic_valid_id" :p_data="clinics"/> -->
 
 </template>
 
@@ -78,7 +78,7 @@ import { useAlertStore } from '~/store/alert';
 //   // layout: "clear",
 //   middleware: [
 //     function (to, from) {
-//       if (!useAuthStore().checkPermission('m_clinic.views')) {
+//       if (!useAuthStore().checkPermission('clinic.views')) {
 //         useCommonStore().loading_full = false;
 //         return navigateTo('/');
 //       }
@@ -109,11 +109,11 @@ const emit = defineEmits(['selectedList']);
 const selectRow = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
-  } else if (m_clinics.value[selected.value].is_active != 1) {
+  } else if (clinics.value[selected.value].is_active != 1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Yang Aktif" });
   }
   else {
-    emit('selectedList', m_clinics.value[selected.value]);
+    emit('selectedList', clinics.value[selected.value]);
     props.fnClose();
   }
 }
@@ -151,10 +151,10 @@ params._TimeZoneOffset = new Date().getTimezoneOffset();
 
 
 const token = useCookie('token');
-const { data: m_clinics } = await useAsyncData(async () => {
+const { data: clinics } = await useAsyncData(async () => {
     if (props.ispop) return;
   useCommonStore().loading_full = true;
-  const { data, error, status } = await useMyFetch("/m_clinics", {
+  const { data, error, status } = await useMyFetch("/clinics", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -188,7 +188,7 @@ const scrolling = ref({
 });
 
 const dt_selected = computed(()=>{  
-  return m_clinics.value[selected.value];
+  return clinics.value[selected.value];
 })
 
 
@@ -197,7 +197,7 @@ const inject_params = () => {
   // console.log("globalkey",useCommonStore()._tv.global_keyword);
   let words = JSON.parse(JSON.stringify(useCommonStore()._tv.global_keyword[frmName]));
   if (words != "") {
-    params.like = `id:%${words}%,name:%${words}%`;
+    params.like = `id:%${words}%,name:%${words}%,phone_number:%${words}%,whatsapp_number:%${words}%`;
   }
   params.sort = "";
   if (sort.value.field) {
@@ -213,10 +213,10 @@ const callData = async () => {
   useCommonStore().loading_full = true;
   scrolling.value.may_get_data = false;
   params.page = scrolling.value.page;
-  if (params.page == 1) m_clinics.value = [];
+  if (params.page == 1) clinics.value = [];
   params.filter_status = filter_status.value;
 
-  const { data, error, status } = await useMyFetch("/m_clinics", {
+  const { data, error, status } = await useMyFetch("/clinics", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -239,10 +239,10 @@ const callData = async () => {
   }
 
   if (scrolling.value.page == 1) {
-    m_clinics.value = data.value.data;
+    clinics.value = data.value.data;
     if (loadRef.value) loadRef.value.scrollTop = 0;
   } else if (scrolling.value.page > 1) {
-    m_clinics.value = [...m_clinics.value, ...data.value.data];
+    clinics.value = [...clinics.value, ...data.value.data];
   }
   if (data.value.data.length == 0) {
     scrolling.value.is_last_record = true;
@@ -281,15 +281,15 @@ const searching = () => {
 
 const router = useRouter();
 
-const forms_m_clinic_show = ref(false);
-const forms_m_clinic_id = ref(0);
-const forms_m_clinic_copy = ref(0);
-const forms_m_clinic_is_view = ref(false)
+const forms_clinic_show = ref(false);
+const forms_clinic_id = ref(0);
+const forms_clinic_copy = ref(0);
+const forms_clinic_is_view = ref(false)
 const form_add = () => {
-  forms_m_clinic_id.value = 0;
-  forms_m_clinic_is_view.value = false;
-  forms_m_clinic_copy.value = false;
-  forms_m_clinic_show.value = true;
+  forms_clinic_id.value = 0;
+  forms_clinic_is_view.value = false;
+  forms_clinic_copy.value = false;
+  forms_clinic_show.value = true;
 }
 
 const { display } = useAlertStore();
@@ -299,10 +299,10 @@ const form_edit = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_m_clinic_id.value = m_clinics.value[selected.value].id;
-    forms_m_clinic_is_view.value = false;
-    forms_m_clinic_copy.value = false;
-    forms_m_clinic_show.value = true;
+    forms_clinic_id.value = clinics.value[selected.value].id;
+    forms_clinic_is_view.value = false;
+    forms_clinic_copy.value = false;
+    forms_clinic_show.value = true;
   }
 };
 
@@ -310,22 +310,22 @@ const form_copy = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_m_clinic_id.value = m_clinics.value[selected.value].id;
-    forms_m_clinic_is_view.value = false;
-    forms_m_clinic_copy.value = true;
-    forms_m_clinic_show.value = true;
+    forms_clinic_id.value = clinics.value[selected.value].id;
+    forms_clinic_is_view.value = false;
+    forms_clinic_copy.value = true;
+    forms_clinic_show.value = true;
     // router.push({ name: 'data_trx_trp-form', query: { id: trx_trps.value[selected.value].id } });
   }
 };
 
-const forms_m_clinic_valid_show = ref(false);
-const forms_m_clinic_valid_id = ref(0);
+const forms_clinic_valid_show = ref(false);
+const forms_clinic_valid_id = ref(0);
 const validasi = () => {
   if (selected.value == -1) {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
-    forms_m_clinic_valid_id.value = m_clinics.value[selected.value].id;
-    forms_m_clinic_valid_show.value = true;
+    forms_clinic_valid_id.value = clinics.value[selected.value].id;
+    forms_clinic_valid_show.value = true;
   }
 };
 
@@ -344,7 +344,7 @@ const remove = () => {
     display({ show: true, status: "Failed", message: "Silahkan Pilih Data Terlebih Dahulu" });
   } else {
     deleted_reason.value = '';
-    delete_data.value = { id: m_clinics.value[selected.value].id };
+    delete_data.value = { id: clinics.value[selected.value].id };
     delete_box.value = true;
   }
 };
@@ -360,11 +360,11 @@ const confirmed_delete = async () => {
   useCommonStore().loading_full = true;
 
   const data_in = new FormData();
-  data_in.append("id", m_clinics.value[selected.value].id);
+  data_in.append("id", clinics.value[selected.value].id);
   data_in.append("deleted_reason", deleted_reason.value);
   data_in.append("_method", "DELETE");
 
-  const { data, error, status } = await useMyFetch("/m_clinic", {
+  const { data, error, status } = await useMyFetch("/clinic", {
     method: "post",
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -378,16 +378,16 @@ const confirmed_delete = async () => {
     useErrorStore().trigger(error);
     return;
   }
-  let old = {...m_clinics.value[selected.value]};
+  let old = {...clinics.value[selected.value]};
   old['deleted'] = data.value.deleted;
   old['deleted_user'] = data.value.deleted_user;
   old['deleted_at'] = data.value.deleted_at;
   old['deleted_by'] = data.value.deleted_by;
   old['deleted_reason'] = data.value.deleted_reason;
   if(filter_status.value!='all'){
-    m_clinics.value.splice(selected.value,1);
+    clinics.value.splice(selected.value,1);
   }else{
-    m_clinics.value.splice(selected.value,1,{...old});
+    clinics.value.splice(selected.value,1,{...old});
   }
 
   selected.value = -1;
@@ -401,10 +401,10 @@ const fields_thead=ref([
   {key:"id",label:"ID",filter_on:1,type:"number"},
   {key:"code",label:"Code",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
   {key:"name",label:"Name",filter_on:1,type:'string'},
-  {key:"contact_person", label: "Contact Person", freeze: 0, filter_on: 1, type: 'string'},
-  {key:"contact_number",label:"Contact Number", freeze: 0,filter_on:1,type:'string'},
+  {key:"phone_number", label: "Phone Number", freeze: 0, filter_on: 1, type: 'string'},
+  {key:"whatsapp_number",label:"Whatsapp Number", freeze: 0,filter_on:1,type:'string'},
   {key:"address",label:"Address",filter_on:1,type:'string'},
-  {key:"note",label:"Note",filter_on:1,type:'string'},
+  // {key:"note",label:"Note",filter_on:1,type:'string'},
   {key:"is_active",label:"Status Aktif",filter_on:1,type:'string'},
   {key:"created_utc_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
   {key:"updated_utc_at",label:"Updated At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
@@ -416,27 +416,27 @@ const fields_thead=ref([
 const enabled_copy = computed(()=>{  
   let result = selected.value > -1 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1
-  && useUtils().checkPermission('m_clinic.create');
+  && useUtils().checkPermission('clinic.create');
   return result;
 })
 
 const enabled_add = computed(()=>{  
   let result = ['active','nonactive','all'].indexOf(filter_status.value) > -1  
-  && useUtils().checkPermission('m_clinic.create');
+  && useUtils().checkPermission('clinic.create');
   return result;
 })
 
 const enabled_edit = computed(()=>{  
   let result = selected.value > -1 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1
-  && useUtils().checkPermissions(['m_clinic.modify']);
+  && useUtils().checkPermissions(['clinic.modify']);
   return result;
 })
 
 
 const enabled_remove = computed(()=>{  
   let result = selected.value > -1
-  && useUtils().checkPermission('m_clinic.remove') 
+  && useUtils().checkPermission('clinic.remove') 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1;
   return result;
 })

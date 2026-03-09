@@ -3,8 +3,9 @@
   <div class="w-full flex justify-center items-center grow h-0 pb-1 px-1 flex-col">
     <div class="w-full flex justify-end">
       <div class="w-6/12 p-1 sm:w-4/12 md:w-3/12 lg:w-3/12 flex flex-col">
-        <input class="flex-grow" type="text" v-model="global_keyword" name="search"
-          placeholder="Keyword" @keyup.enter="doFilter()">
+        <input class="flex-grow" type="text" ref="ref_keyword" v-model="global_keyword" name="search"
+          placeholder="Keyword" @keyup="autoSearchKeyword">
+          <!-- @keyup.enter="doFilter()"  -->
       </div>
       <button type="button" name="button" aria-label="Search" class="m-1 text-2xl " @click="doFilter()">
         <IconsSearch />
@@ -318,6 +319,16 @@ const props = defineProps({
       required:false,
       default:{}
     },
+  triggerFirst:{
+    type:Boolean,
+    required:false,
+    default:false
+  },
+  frmName: {
+    type: String,
+    required: true,
+    default:""
+  }
 });
 
 const tbody_fields = ref([]);
@@ -745,7 +756,7 @@ const paginateToPage=async(page)=>{
 }
 
 const filter_model=ref({});
-useCommonStore()._tv.filter_model = filter_model;
+useCommonStore()._tv.filter_model[props.frmName] = filter_model;
 // filter_model.value.all_key =tbody_fields.value.map((x)=>x.key);
 const sort_priority = ref(JSON.parse(JSON.stringify(tbody_fields.value.map((x,k)=>(k+1).toString()))));
 tbody_fields.value.forEach((z,k)=>{
@@ -824,7 +835,7 @@ const clearAllFields=()=>{
 }
 
 const global_keyword=ref("");
-useCommonStore()._tv.global_keyword = global_keyword;
+useCommonStore()._tv.global_keyword[props.frmName] = global_keyword;
 
 
 const checkbox_arr = ref([]);
@@ -838,7 +849,35 @@ const checkbox_set = ($val)=>{
   }
   emit('setCheckbox',checkbox_arr.value );
 }
-// for example
+
+
+
+const ref_keyword = ref(null);
+let autoSearchKeywordTimeout  = null;
+
+const autoSearchKeyword= (event)=>{
+  console.log(event);
+  if(['Shift','Control','Alt','ArrowRight','ArrowLeft','ArrowUp','ArrowDown'
+  ,'Insert','Home','PageUp','PageDown','End','PrintScreen','Pause'].indexOf(event.key)>-1 ){
+
+  }else if(event.key !== 'Enter'){
+    if(autoSearchKeywordTimeout) clearTimeout(autoSearchKeywordTimeout);
+    autoSearchKeywordTimeout = setTimeout(()=>{
+      doFilter()
+    },500);
+  }else{
+    doFilter()
+  }
+};
+
+watch(()=>props.triggerFirst,(newVal, oldVal) => {
+  if(ref_keyword.value){
+    ref_keyword.value.focus();
+  }
+}, {
+  // deep:true,
+  // immediate: true
+});// for example
 // const fields_thead=ref([
 //   {key:"status",label:"Status"},
 //   {key:"app1",label:"App 1"},

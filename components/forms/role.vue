@@ -1,17 +1,32 @@
 <template>
   <section v-show="show" class="box-fixed">
     <div>
-      <HeaderPopup :title="'Form Permission Group'" :fn="fnClose" class="w-100 flex align-items-center"
+      <HeaderPopup :title="'Form Role'" :fn="fnClose" class="w-100 flex align-items-center"
         style="color:white;" />
 
         <form action="#" class="w-full flex grow flex-col h-0 overflow-auto bg-white">
           <div class="w-full flex flex-col items-center grow overflow-auto">
             <div class="w-full flex flex-row flex-wrap">
-              <div class="w-full flex flex-col flex-wrap p-1">
+              <div class="w-full sm:w-6/12 flex flex-col flex-wrap p-1">
                 <label for="">Name</label>
                 <input v-model="role.name">
                 <p class="text-red-500">{{ field_errors.name }}</p>
               </div>
+              <div class="w-full sm:w-6/12 flex flex-col flex-wrap p-1">
+                <label for="">Scope</label>
+                <select v-model="role.scope">
+                  <option value="CLINIC">CLINIC</option>
+                  <option value="PLATFORM">PLATFORM</option>
+                </select>
+                <p class="text-red-500">{{ field_errors.scope }}</p>
+              </div>
+              <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 flex flex-col flex-wrap p-1">
+                  <label for="">Clinic</label>
+
+                  <WidthMiniList2 :fnOpen="()=>{showClinic=true}" :dclass="clinic_sl"/>
+                  <!-- {{ selected_clinic }} -->
+                    <p class="text-red-500">{{ field_errors.clinic_id }}</p>
+                </div>
             </div>
 
             <div class="w-full flex flex-col sm:flex-row grow p-1 justify-between flex-wrap 2xl:overflow-hidden">
@@ -21,20 +36,23 @@
                     <thead >
                       <tr class="sticky -top-1 !z-[2]">
                         <td colspan="2" class="!bg-slate-800 text-white font-bold">
-                          Detail Permission List
+                          Detail Permission
                         </td>
                       </tr>
                       <tr class="sticky top-7 !z-[2]">
                         <th class="min-w-[20px] !w-[20px] max-w-[20px]">
-                          <button type="button" name="button" class="text-xs" :class="(permission_list_checked.length != permission_list.length) ?'bg-green-500' :'bg-red-500'" @click="unChPerList()">
-                            {{ (permission_list_checked.length != permission_list.length) ? 'Allow' : 'Deny' }}
+                          <button type="button" name="button" class="text-xs" :class="(permissions_checked.length != permissions.length) ?'bg-green-500' :'bg-red-500'" @click="unChPerList()">
+                            {{ (permissions_checked.length != permissions.length) ? 'Allow' : 'Deny' }}
                           </button>
                         </th> 
-                        <th>Name</th>
+                        <th><div class="w-full flex items-center">
+                            <input type="text" v-model="search_permission" name="search"
+                            placeholder="Name">
+                          </div></th>
                       </tr>
                     </thead>
                     <tbody ref="to_move">
-                      <template v-for="(pl, index) in permission_list" :key="index">
+                      <template v-for="(pl, index) in source_permissions" :key="index">
                         <tr>
                           <td class="!w-[10px]">
                             <div class="w-full h-full flex items-center justify-center">
@@ -67,11 +85,16 @@
                             {{ (users_checked.length != users.length) ? 'Allow' : 'Deny' }}
                           </button>
                         </th> 
-                        <th>Name</th>
+                        <th>
+                          <div class="w-full flex items-center">
+                            <input type="text" v-model="search_user" name="search"
+                            placeholder="Name">
+                          </div>
+                        </th>
                       </tr>
                     </thead>
                     <tbody ref="to_move">
-                      <template v-for="(user, index) in users" :key="index">
+                      <template v-for="(user, index) in source_users" :key="index">
                         <tr>
                           <td class="!w-[10px]">
                             <div class="w-full h-full flex items-center justify-center">
@@ -80,7 +103,7 @@
                           </td>
                           <td>
                             <div class="w-full h-full flex items-center justify-start">
-                              {{ user.username }}
+                              {{ user.fullname }}
                             </div>
                           </td>
                         </tr>
@@ -104,6 +127,10 @@
           </div>
         </form>
     </div>
+
+    <FullClinic :ispop="true" :showpop="showClinic" :fnClose="() => {
+      showClinic = false; 
+    }" @selectedList="clinic_sl.build($event)"/>
   </section>
 </template>
 
@@ -118,6 +145,20 @@ import { useCommonStore } from '~/store/common';
 import { useAlertStore } from '~/store/alert';
 
 const { pointFormat } = useUtils();
+import { SelectList } from '~/mycl/SelectList'
+
+
+const clinic_sl = new SelectList()
+clinic_sl.base = [
+  { key: "id", text: "ID", icon: "IconsBaselineNumbers" },
+  { key: "code", text: "Code", icon: "IconsNumber" },
+  { key: "name", text: "Name", icon: "IconsPerson" },
+];
+
+const showClinic = ref(false);
+const selected_clinic = ref();
+clinic_sl.buildRef(selected_clinic);
+clinic_sl.buildStruct(); 
 
 const props = defineProps({
   show: {
@@ -161,8 +202,9 @@ const props = defineProps({
 })
 
 const role_temp = {
-    name: "",
-    list: [],
+  name: "",
+  scope: "CLINIC",
+  list: [],
 };
 
 const role = ref({...role_temp});
@@ -175,8 +217,10 @@ const doSave = async () => {
 
   const data_in = new FormData();
   data_in.append("name", role.value.name);
-  data_in.append("permission_list", JSON.stringify(permission_list_checked.value));
+  data_in.append("scope", role.value.scope);
+  data_in.append("permission", JSON.stringify(permissions_checked.value));
   data_in.append("users", JSON.stringify(users_checked.value));
+  data_in.append("clinic_id", selected_clinic.value.id);
 
 
   let $method = "post";
@@ -202,6 +246,8 @@ const doSave = async () => {
     useErrorStore().trigger(error, field_errors);
     return;
   }
+
+  clinic_sl.toData(role,"clinic");
 
   if(id<=0){
     role.value.id = data.value.id;
@@ -251,22 +297,23 @@ const callData = async () => {
     role.value.val1 = 0;
   }
 
-  data.value.data.details.forEach((v,k)=>{
-    permission_list.value = permission_list.value.map(x=>{
-      if(x.name == v.i_perm_list_name)
+  data.value.data.role_permissions.forEach((v,k)=>{
+    permissions.value = permissions.value.map(x=>{
+      if(x.name == v.permission.name)
       x.checked = true;
       return x
     })
   })
 
 
-  data.value.data.users.forEach((v,k)=>{
+  data.value.data.user_roles.forEach((v,k)=>{
     users.value = users.value.map(x=>{
-      if(x.username == v.username)
+      if(x.fullname == v.fullname)
       x.checked = true;
       return x
     })
   })
+  clinic_sl.build(data.value.data.clinic);
 
   // details.value = data.value.data.details.map((x)=>{
   //   x["p_status"]= p_status;
@@ -276,11 +323,11 @@ const callData = async () => {
   
 }
 
-const permission_list = ref([]);
+const permissions = ref([]);
 
 const callPermissionListData = async () => {
   useCommonStore().loading_full = true;
-  const { data, error, status } = await useMyFetch("/permission_lists", {
+  const { data, error, status } = await useMyFetch("/permissions", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -301,7 +348,7 @@ const callPermissionListData = async () => {
     return;
   }
 
-  permission_list.value = data.value.data.map((x)=>{
+  permissions.value = data.value.data.map((x)=>{
     x["checked"] = false;
     return x;
   });
@@ -317,7 +364,7 @@ const callUserData = async () => {
       // 'Content-Type': 'application/json',
       'Accept': 'application/json'
     },
-    params: {sort: "username:asc"},
+    params: {sort: "fullname:asc"},
     // body: {
     //   sort: "updated_at:desc"
     // },
@@ -337,17 +384,17 @@ const callUserData = async () => {
   });
 }
 
-const permission_list_checked = computed((x)=>{
-  return permission_list.value.filter((x)=>x.checked);
+const permissions_checked = computed((x)=>{
+  return permissions.value.filter((x)=>x.checked);
 })
 const unChPerList=(item)=>{
-  if(permission_list_checked.value.length != permission_list.value.length){
-    permission_list.value = permission_list.value.map(x=>{
+  if(permissions_checked.value.length != permissions.value.length){
+    permissions.value = permissions.value.map(x=>{
       x.checked = true;
       return x;
     });
   }else{
-    permission_list.value = permission_list.value.map(x=>{
+    permissions.value = permissions.value.map(x=>{
       x.checked = false;
       return x;
     });
@@ -375,7 +422,8 @@ const unChUser=(item)=>{
 watch(() => props.show, async(newVal, oldVal) => {
   if (newVal == true){
     role.value = {...role_temp};
-    permission_list.value = [];
+    permissions.value = [];
+    clinic_sl.build();
 
     await callPermissionListData();
     await callUserData();
@@ -385,6 +433,31 @@ watch(() => props.show, async(newVal, oldVal) => {
   }
 }, {
   immediate: true
+});
+
+
+const search_permission = ref("");
+
+const source_permissions = computed(()=>{
+  if(search_permission.value!="")  
+  return permissions.value.filter(
+    (x)=>
+    x.name.toLowerCase().includes(search_permission.value.toLowerCase())
+  );
+  else
+  return permissions.value;
+});
+
+const search_user = ref("");
+
+const source_users = computed(()=>{
+  if(search_user.value!="")  
+  return users.value.filter(
+    (x)=>
+    x.username.toLowerCase().includes(search_user.value.toLowerCase())
+  );
+  else
+  return users.value;
 });
 
 </script>

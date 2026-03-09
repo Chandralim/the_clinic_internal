@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0" :class="ispop ?'fixed':'relative'">
+    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0 z-10" :class="ispop ?'fixed':'relative'">
         <HeaderPopup v-if="ispop" :title="'Form User'" :fn="fnClose" class="w-100 flex align-items-center"
         style="color:white;" />
         <div class="w-full flex grow flex-col overflow-auto h-0">
@@ -55,7 +55,7 @@
         </template>
       </PopupMini>
       <FormsUser :show="forms_user_show" :fnClose="() => { forms_user_show = false }"
-        :id="forms_user_id" :p_data="users" />
+        :id="forms_user_id" :p_data="users" :is_copy="forms_user_copy" />
       
       <!-- <PopupMini :type="'delete'" :show="delete_box" :data="delete_data" :fnClose="toggleDeleteBox" :fnConfirm="confirmed_delete" />
       <FormsUser :show="forms_user_show" :fnClose="()=>{forms_user_show=false}" :id="forms_user_id" :p_data="users"/> -->

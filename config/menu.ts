@@ -66,9 +66,9 @@ export const menuList = [
     icon: 'IconsProduct'
   },
   {
-    activeMenu: "/data_trx_trp/absen",
-    permission: 'trp_trx.absen.views',
-    title: "Trx Absen",
+    activeMenu: "/clinic",
+    permission: 'clinic.views',
+    title: "Clinic",
     icon: 'IconsProduct'
   },
   {

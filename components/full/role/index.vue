@@ -1,18 +1,18 @@
 <template>
-    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0" :class="ispop ?'fixed':'relative'">
+    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0 z-10" :class="ispop ?'fixed':'relative'">
         <HeaderPopup v-if="ispop" :title="'Form Role'" :fn="fnClose" class="w-100 flex align-items-center"
         style="color:white;" />
         <div class="w-full flex grow flex-col overflow-auto h-0">
             <div class="w-full flex justify-between flex-wrap">
             <div class="grow flex">
-                <div class="m-1">
+              <!-- <option value="deleted">Trash</option> -->
+              <!-- <div class="m-1">
                 <select class="" v-model="filter_status" >
                     <option value="active">Active</option>
                     <option value="nonactive">Nonactive</option>
-                    <!-- <option value="deleted">Trash</option> -->
                     <option value="all">All</option>
                 </select>
-              </div>
+              </div> -->
               <button v-if="enabled_copy" type="button" name="button" class="m-1 text-2xl "
                 @click="form_copy()">
                 <IconsCopy />
@@ -410,8 +410,8 @@ const fields_thead=ref([
   // {key:"email",label:"Email",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
   // {key:"group",label:"Group",filter_on:1,type:'string'},
   // {key:"is_active",label:"Status",filter_on:1,type:"select",select_item:[{k:'1',v:'Ya'},{k:'0',v:'Tidak'}]},
-  {key:"created_utc_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
-  {key:"updated_utc_at",label:"Updated At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
+  // {key:"created_utc_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
+  // {key:"updated_utc_at",label:"Updated At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
   // {key:"deleted_by_email",label:"Deleted By",tbl_show:1},
   // {key:"deleted_at",label:"Deleted At",type:'datetime',dateformat:"DD-MM-Y HH:mm:ss",filter_on:1, tbl_show:1},
   // {key:"deleted_reason",label:"Deleted Reason", tbl_show:1,type:'string',filter_on:1},

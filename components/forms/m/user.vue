@@ -350,7 +350,7 @@ if (data.value.data.photo_location) photo.value = true;
 watch(() => props.show, async(newVal, oldVal) => {
   if (newVal == true) {
     m_user.value = { ...m_user_temp };
-    clinic_sl.build()
+    clinic_sl.build();
     photo.value = false;
     photo_input.value.value = '';
     field_errors.value = {};

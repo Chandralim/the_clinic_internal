@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col">
     <Header :title="'List clinic'" />
-    <FullMClinic />
+    <FullClinic />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ definePageMeta({
   // layout: "clear",
   middleware: [
     function (to, from) {
-      if (!useAuthStore().checkPermission('m_clinic.views')) {
+      if (!useAuthStore().checkPermission('clinic.views')) {
         useCommonStore().loading_full = false;
         return navigateTo('/');
       }

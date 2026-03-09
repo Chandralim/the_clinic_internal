@@ -9,43 +9,43 @@
             
             <div class="w-full flex flex-col flex-wrap p-1">
               <label for="">Code</label>
-              <input type="text" v-model="m_clinic.code">
+              <input type="text" v-model="clinic.code">
               <p class="text-red-500">{{ field_errors.code }}</p>
             </div>
 
             <div class="w-full flex flex-col flex-wrap p-1">
               <label for="">Name</label>
-              <input type="text" v-model="m_clinic.name">
+              <input type="text" v-model="clinic.name">
               <p class="text-red-500">{{ field_errors.name }}</p>
             </div>
 
             <div class="w-full flex flex-col flex-wrap p-1">
               <label for="">Address</label>
-              <textarea v-model="m_clinic.address"></textarea>
+              <textarea v-model="clinic.address"></textarea>
               <p class="text-red-500">{{ field_errors.address }}</p>
             </div>
 
-            <div class="w-full flex flex-col flex-wrap p-1">
-              <label for="">Contact Number</label>
-              <input type="text" v-model="m_clinic.contact_number">
-              <p class="text-red-500">{{ field_errors.contact_number }}</p>
+            <div class="w-full sm:w-4/12  flex flex-col flex-wrap p-1">
+              <label for="">Phone Number</label>
+              <input type="text" v-model="clinic.phone_number">
+              <p class="text-red-500">{{ field_errors.phone_number }}</p>
             </div>
 
-            <div class="w-full flex flex-col flex-wrap p-1">
-              <label for="">Contact Person</label>
-              <input type="text" v-model="m_clinic.contact_person">
-              <p class="text-red-500">{{ field_errors.contact_person }}</p>
+            <div class="w-full sm:w-4/12  flex flex-col flex-wrap p-1">
+              <label for="">Whatsapp Number</label>
+              <input type="text" v-model="clinic.whatsapp_number">
+              <p class="text-red-500">{{ field_errors.whatsapp_number }}</p>
             </div>
 
-            <div class="w-full flex flex-col flex-wrap p-1">
+            <!-- <div class="w-full flex flex-col flex-wrap p-1">
               <label for="">Note</label>
-              <textarea v-model="m_clinic.note"></textarea>
+              <textarea v-model="clinic.note"></textarea>
               <p class="text-red-500">{{ field_errors.note }}</p>
-            </div>
+            </div> -->
 
-            <div class="w-full sm:w-4/12 md:w-3/12 lg:w-3/12 flex flex-col flex-wrap p-1">
+            <div class="w-full  sm:w-4/12  flex flex-col flex-wrap p-1">
                 <label for="">Status</label>
-                <select v-model="m_clinic.is_active">
+                <select v-model="clinic.is_active">
                   <option value="1">Aktif</option>
                   <option value="0">Nonaktif</option>
                 </select>
@@ -91,20 +91,25 @@ const props = defineProps({
     required:true,
     default:[]
   },
+  is_copy: {
+    type: [Boolean,Number],
+    required: true,
+    default: false,
+  },
 })
 
-const m_clinic_temp = {
+const clinic_temp = {
   id: -1,
   code: "",
   name: "",
-  contact_number: "",
-  contact_person: "",
-  note: "",
+  phone_number: "",
+  whatsapp_number: "",
+  // note: "",
   is_active: 0,
   address: "",
 };
 
-const m_clinic = ref({...m_clinic_temp});
+const clinic = ref({...clinic_temp});
 
 const token = useCookie('token');
 const field_errors = ref({})
@@ -115,24 +120,25 @@ const doSave = async () => {
 
   const data_in = new FormData();
   
-  data_in.append("code", m_clinic.value.code);
-  data_in.append("name", m_clinic.value.name);
-  data_in.append("contact_number", m_clinic.value.contact_number);
-  data_in.append("contact_person", m_clinic.value.contact_person);
-  data_in.append("address", m_clinic.value.address);
-  data_in.append("note", m_clinic.value.note);
-  data_in.append("is_active", m_clinic.value.is_active);
+  data_in.append("code", clinic.value.code);
+  data_in.append("name", clinic.value.name);
+  data_in.append("phone_number", clinic.value.phone_number);
+  data_in.append("whatsapp_number", clinic.value.whatsapp_number);
+  data_in.append("address", clinic.value.address);
+  // data_in.append("note", clinic.value.note);
+  data_in.append("is_active", clinic.value.is_active);
 
   let $method = "post";
 
-  let id = props.id;
+  let id = props.is_copy ? 0 : props.id;
+
   if (id == 0) {
   } else {
     data_in.append("id", id);
     data_in.append("_method", "PUT");
   }
 
-  const { data, error, status } = await useMyFetch("/m_clinic", {
+  const { data, error, status } = await useMyFetch("/clinic", {
     method: $method,
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -147,16 +153,16 @@ const doSave = async () => {
     return;
   }
 
-  m_clinic.value.updated_utc_at = data.value.updated_utc_at;
+  clinic.value.updated_utc_at = data.value.updated_utc_at;
   
-  if(props.id<=0){
-    m_clinic.value.id = data.value.id;
-    m_clinic.value.created_utc_at = data.value.created_utc_at;
-    props.p_data.unshift(m_clinic.value);
+  if(id<=0){
+    clinic.value.id = data.value.id;
+    clinic.value.created_utc_at = data.value.created_utc_at;
+    props.p_data.unshift(clinic.value);
   }else{
     let idx= props.p_data.map((x)=>x.id).indexOf(props.id);
     if(idx>=-1){
-      props.p_data.splice(idx,1,{...m_clinic.value});    
+      props.p_data.splice(idx,1,{...clinic.value});    
     }
   }
   props.fnClose();
@@ -165,7 +171,7 @@ const doSave = async () => {
 
 const callData = async () => {
   useCommonStore().loading_full = true;
-  const { data, error, status } = await useMyFetch("/m_clinic", {
+  const { data, error, status } = await useMyFetch("/clinic", {
     method: 'get',
     headers: {
       'Authorization': `Bearer ${token.value}`,
@@ -186,12 +192,12 @@ const callData = async () => {
     return;
   }
 
-  m_clinic.value = data.value.data;
+  clinic.value = data.value.data;
 }
 
 watch(() => props.show, (newVal, oldVal) => {
   if (newVal == true){
-    m_clinic.value = { ...m_clinic_temp };
+    clinic.value = { ...clinic_temp };
     field_errors.value = {};
     if(props.id!=0)
     callData();

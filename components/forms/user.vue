@@ -114,6 +114,11 @@ const props = defineProps({
     required:true,
     default:[]
   },
+  is_copy: {
+    type: [Boolean,Number],
+    required: true,
+    default: false,
+  },
 })
 
 const user_temp = {
@@ -151,7 +156,7 @@ const doSave = async () => {
 
   let $method = "post";
 
-  let id = props.id;
+  let id = props.is_copy ? 0 : props.id;
   if (id == 0) {
   } else {
     // $method = "put";
@@ -179,7 +184,7 @@ const doSave = async () => {
   }
 
   
-  if(props.id<=0){
+  if(id<=0){
     user.value.id = data.value.id;
     user.value.birth_date = $parseDate(user.value.birth_date).toFormat("y-MM-dd");
     user.value.created_utc_at = data.value.created_utc_at;
