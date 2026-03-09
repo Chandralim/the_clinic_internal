@@ -42,6 +42,14 @@
             <template #[`is_active`]="{item}">
               {{ item.is_active==1 ? "Aktif" : "Tidak Aktif" }}
             </template> -->
+
+            <template #[`clinic_code`]="{item}">
+              {{ item.clinic ? item.clinic.code : "" }}
+            </template>
+
+            <template #[`clinic_name`]="{item}">
+              {{ item.clinic ? item.clinic.name : "" }}
+            </template>
             
           </TableView>
         </div>
@@ -404,8 +412,15 @@ const confirmed_delete = async () => {
 
 const fields_thead=ref([
   {key:"no",label:"No",isai:true},
-  { key: "id", label: "ID", filter_on: 1, type: "number" },
+  {key: "id", label: "ID", filter_on: 1, type: "number" },
   {key:"name",label:"Nama",filter_on:1,type:'string'},
+  {key:"scope",label:"Scope",filter_on:1,type:'string'},
+  {key:"clinic",label:"Clinic",childs:[
+    {key:"clinic_code",label:"Code",filter_on:1,type:'string'},
+    {key:"clinic_name",label:"Name",filter_on:1,type:'string'},
+  // {key:"val",label:"Kasir",filter_on:1,type:"select",select_item:[{k:'1',v:'Approve'},{k:'0',v:'Unapprove'}]},
+    // {key:"val1",label:"Logistik",filter_on:1,type:"select",select_item:[{k:'1',v:'Approve'},{k:'0',v:'Unapprove'}]},
+  ]},
   
   // {key:"email",label:"Email",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
   // {key:"group",label:"Group",filter_on:1,type:'string'},
