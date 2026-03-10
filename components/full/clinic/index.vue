@@ -152,8 +152,10 @@ params._TimeZoneOffset = new Date().getTimezoneOffset();
 
 const token = useCookie('token');
 const { data: clinics } = await useAsyncData(async () => {
-    if (props.ispop) return;
+  if (props.ispop) return;
   useCommonStore().loading_full = true;
+  params.filter_status = filter_status.value;
+  
   const { data, error, status } = await useMyFetch("/clinics", {
     method: 'get',
     headers: {
