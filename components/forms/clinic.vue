@@ -15,26 +15,32 @@
 
             <div class="w-full flex flex-col flex-wrap p-1">
               <label for="">Name</label>
-              <input type="text" v-model="clinic.name">
-              <p class="text-red-500">{{ field_errors.name }}</p>
+              <input type="text" v-model="clinic.in_name">
+              <p class="text-red-500">{{ field_errors.in_name }}</p>
             </div>
 
             <div class="w-full flex flex-col flex-wrap p-1">
               <label for="">Address</label>
-              <textarea v-model="clinic.address"></textarea>
-              <p class="text-red-500">{{ field_errors.address }}</p>
+              <textarea v-model="clinic.in_address"></textarea>
+              <p class="text-red-500">{{ field_errors.in_address }}</p>
             </div>
 
-            <div class="w-full sm:w-4/12  flex flex-col flex-wrap p-1">
-              <label for="">Phone Number</label>
-              <input type="text" v-model="clinic.phone_number">
-              <p class="text-red-500">{{ field_errors.phone_number }}</p>
+            <div class="w-full sm:w-6/12 flex flex-col flex-wrap p-1">
+              <label for="">Contact Person Name</label>
+              <input type="text" v-model="clinic.cp_name">
+              <p class="text-red-500">{{ field_errors.cp_name }}</p>
             </div>
 
-            <div class="w-full sm:w-4/12  flex flex-col flex-wrap p-1">
-              <label for="">Whatsapp Number</label>
-              <input type="text" v-model="clinic.whatsapp_number">
-              <p class="text-red-500">{{ field_errors.whatsapp_number }}</p>
+            <div class="w-full sm:w-6/12 flex flex-col flex-wrap p-1">
+              <label for="">Contact Person Phone Number</label>
+              <input type="text" v-model="clinic.cp_phone_number">
+              <p class="text-red-500">{{ field_errors.cp_phone_number }}</p>
+            </div>
+
+            <div class="w-full sm:w-6/12 flex flex-col flex-wrap p-1">
+              <label for="">Contact Person Whatsapp Number</label>
+              <input type="text" v-model="clinic.cp_whatsapp_number">
+              <p class="text-red-500">{{ field_errors.cp_whatsapp_number }}</p>
             </div>
 
             <!-- <div class="w-full flex flex-col flex-wrap p-1">
@@ -43,7 +49,7 @@
               <p class="text-red-500">{{ field_errors.note }}</p>
             </div> -->
 
-            <div class="w-full  sm:w-4/12  flex flex-col flex-wrap p-1">
+            <div class="w-full sm:w-6/12 flex flex-col flex-wrap p-1">
                 <label for="">Status</label>
                 <select v-model="clinic.is_active">
                   <option value="1">Aktif</option>
@@ -101,12 +107,13 @@ const props = defineProps({
 const clinic_temp = {
   id: -1,
   code: "",
-  name: "",
-  phone_number: "",
-  whatsapp_number: "",
+  in_name: "",
+  in_address: "",
+  cp_name: "",
+  cp_phone_number: "",
+  cp_whatsapp_number: "",
   // note: "",
   is_active: 0,
-  address: "",
 };
 
 const clinic = ref({...clinic_temp});
@@ -121,10 +128,11 @@ const doSave = async () => {
   const data_in = new FormData();
   
   data_in.append("code", clinic.value.code);
-  data_in.append("name", clinic.value.name);
-  data_in.append("phone_number", clinic.value.phone_number);
-  data_in.append("whatsapp_number", clinic.value.whatsapp_number);
-  data_in.append("address", clinic.value.address);
+  data_in.append("in_name", clinic.value.in_name);
+  data_in.append("in_address", clinic.value.in_address);
+  data_in.append("cp_name", clinic.value.cp_name);
+  data_in.append("cp_phone_number", clinic.value.cp_phone_number);
+  data_in.append("cp_whatsapp_number", clinic.value.cp_whatsapp_number);
   // data_in.append("note", clinic.value.note);
   data_in.append("is_active", clinic.value.is_active);
 

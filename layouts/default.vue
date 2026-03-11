@@ -2,7 +2,7 @@
   <div class="w-full h-full flex">
 
     <nav id="side_menu" ref="side_menu"
-      class="bg-slate-900 h-full min-w-[150px] max-w-[150px] fixed sm:relative sm:left-0  text-white z-10"
+      class="bg-slate-900 h-full min-w-[150px] max-w-[150px] fixed sm:relative sm:left-0  text-white"
       style="width:320px;">
       <div class="relative h-full">
         <button class="absolute left-full h-8 text-2xl text-white bg-slate-500 sm:hidden bg-opacity-0 ring-0 focus:ring-0 flex justify-center items-center"
@@ -180,9 +180,11 @@ if (process.client) {
     if(sm){   
       if(window.innerWidth>=640){
         sm.style.left="0px";
+        sm.style.zIndex = '10';
       }else{
         if(!is_sidebar_open.value){
           sm.style.left="-150px";
+          sm.style.zIndex = '20';
         }
       }
     }
@@ -195,9 +197,11 @@ onMounted(() => {
     if(sm){   
       if(window.innerWidth>=640){
         sm.style.left="0px";
+        sm.style.zIndex = '10';
       }else{
         if(!is_sidebar_open.value){
           sm.style.left="-150px";
+          sm.style.zIndex = '20';
         }
       }
     }

@@ -199,7 +199,7 @@ const inject_params = () => {
   // console.log("globalkey",useCommonStore()._tv.global_keyword);
   let words = JSON.parse(JSON.stringify(useCommonStore()._tv.global_keyword[frmName]));
   if (words != "") {
-    params.like = `id:%${words}%,name:%${words}%,phone_number:%${words}%,whatsapp_number:%${words}%`;
+    params.like = `id:%${words}%,in_name:%${words}%,in_address:%${words}%,cp_name:%${words}%,cp_phone_number:%${words}%,cp_whatsapp_number:%${words}%`;
   }
   params.sort = "";
   if (sort.value.field) {
@@ -402,10 +402,15 @@ const fields_thead=ref([
   {key:"no",label:"No",isai:true},
   {key:"id",label:"ID",filter_on:1,type:"number"},
   {key:"code",label:"Code",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
-  {key:"name",label:"Name",filter_on:1,type:'string'},
-  {key:"phone_number", label: "Phone Number", freeze: 0, filter_on: 1, type: 'string'},
-  {key:"whatsapp_number",label:"Whatsapp Number", freeze: 0,filter_on:1,type:'string'},
-  {key:"address",label:"Address",filter_on:1,type:'string'},
+  {key:"internal",label:"Internal",childs:[
+    {key:"in_name",label:"Name",filter_on:1,type:'string'},
+    {key:"in_address",label:"Address",filter_on:1,type:'string'},
+  ]},
+  {key:"clinic",label:"Contact Person",childs:[
+    {key:"cp_name",label:"Name",filter_on:1,type:'string'},
+    {key:"cp_phone_number", label: "Phone Number", freeze: 0, filter_on: 1, type: 'string'},
+    {key:"cp_whatsapp_number",label:"Whatsapp Number", freeze: 0,filter_on:1,type:'string'},
+  ]},
   // {key:"note",label:"Note",filter_on:1,type:'string'},
   {key:"is_active",label:"Status Aktif",filter_on:1,type:'string'},
   {key:"created_utc_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},

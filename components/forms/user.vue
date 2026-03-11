@@ -26,7 +26,7 @@
                 <p class="text-red-500">{{ field_errors.password }}</p>
               </div>
 
-              <div class="w-full sm:w-4/12 flex flex-col flex-wrap p-1">
+              <!-- <div class="w-full sm:w-4/12 flex flex-col flex-wrap p-1">
                 <label for="">Birth Date</label>
                 <ClientOnly>
                   <vue-date-picker  v-model="user.birth_date" 
@@ -43,7 +43,7 @@
                 <label for="">Birth Place</label>
                 <input type="text" v-model="user.birth_place">
                 <p class="text-red-500">{{ field_errors.birth_place }}</p>
-              </div>
+              </div> -->
 
               <div class="w-full sm:w-4/12 flex flex-col flex-wrap p-1">
                 <label for="">Phone Number</label>
