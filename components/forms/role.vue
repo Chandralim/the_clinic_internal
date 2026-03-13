@@ -75,7 +75,7 @@
                   <table class="tacky w-full !table-auto" style="white-space:normal;">
                     <thead >
                       <tr class="sticky -top-1 !z-[2]">
-                        <td colspan="2" class="!bg-slate-800 text-white font-bold">
+                        <td colspan="3" class="!bg-slate-800 text-white font-bold">
                           Detail Permission User
                         </td>
                       </tr>
@@ -85,7 +85,7 @@
                             {{ (users_checked.length != users.length) ? 'Allow' : 'Deny' }}
                           </button>
                         </th> 
-                        <th>
+                        <th colspan="2" >
                           <div class="w-full flex items-center">
                             <input type="text" v-model="search_user" name="search"
                             placeholder="Name">
@@ -99,6 +99,11 @@
                           <td class="!w-[10px]">
                             <div class="w-full h-full flex items-center justify-center">
                               <input type="checkbox" v-model="user.checked" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
+                            </div>
+                          </td>
+                          <td>
+                            <div class="w-full h-full flex items-center justify-start">
+                              {{ user.email }}
                             </div>
                           </td>
                           <td>
