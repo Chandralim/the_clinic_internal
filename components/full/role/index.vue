@@ -47,8 +47,8 @@
               {{ item.clinic ? item.clinic.code : "" }}
             </template>
 
-            <template #[`clinic_name`]="{item}">
-              {{ item.clinic ? item.clinic.name : "" }}
+            <template #[`clinic_in_name`]="{item}">
+              {{ item.clinic ? item.clinic.in_name : "" }}
             </template>
             
           </TableView>
@@ -419,7 +419,7 @@ const fields_thead=ref([
   {key:"scope",label:"Scope",filter_on:1,type:'string'},
   {key:"clinic",label:"Clinic",childs:[
     {key:"clinic_code",label:"Code",filter_on:1,type:'string'},
-    {key:"clinic_name",label:"Name",filter_on:1,type:'string'},
+    {key:"clinic_in_name",label:"Name",filter_on:1,type:'string'},
   // {key:"val",label:"Kasir",filter_on:1,type:"select",select_item:[{k:'1',v:'Approve'},{k:'0',v:'Unapprove'}]},
     // {key:"val1",label:"Logistik",filter_on:1,type:"select",select_item:[{k:'1',v:'Approve'},{k:'0',v:'Unapprove'}]},
   ]},
