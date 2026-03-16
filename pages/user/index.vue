@@ -13,7 +13,7 @@ definePageMeta({
   // layout: "clear",
   middleware: [
     function (to, from) {
-      if (!useAuthStore().checkPermission('user.views')) {
+      if (!useAuthStore().checkPermission('_user.views')) {
         useCommonStore().loading_full = false;
         return navigateTo('/');
       }

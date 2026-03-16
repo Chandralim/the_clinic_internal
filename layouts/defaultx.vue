@@ -112,14 +112,14 @@
                 Pekerja
               </nuxt-link>
             </li>
-            <li v-if="useUtils().checkPermission('user.views')" :class="activeMenu == '/user'?'active':''" >
+            <li v-if="useUtils().checkPermission('_user.views')" :class="activeMenu == '/user'?'active':''" >
               <nuxt-link to="/user"  class="cursor-pointer" @click="goTo('/user')">
                 <IconsPerson class="mr-1"/>
                 User
               </nuxt-link>
             </li>
 
-            <li v-if="useUtils().checkPermission('role_permission.views')" :class="activeMenu == '/role_permission'?'active':''" >
+            <li v-if="useUtils().checkPermission('_role_permission.views')" :class="activeMenu == '/role_permission'?'active':''" >
               <nuxt-link to="/role_permission"  class="cursor-pointer" @click="goTo('/role_permission')">
                 <IconsPerson class="mr-1"/>
                 Permission Group
