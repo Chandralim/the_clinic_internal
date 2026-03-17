@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   app: {
     baseURL: process.env.ROUTER_BASE || '/',
     head: {
-      title: "Sekantin-Clinic",
+      title: "SC",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0" },

@@ -67,7 +67,7 @@ export const menuList = [
   },
   {
     activeMenu: "/clinic",
-    permission: 'clinic.views',
+    permission: '_clinic.views',
     title: "Clinic",
     icon: 'IconsProduct'
   },
@@ -116,13 +116,13 @@ export const menuList = [
   },
   {
     activeMenu: "/user",
-    permission: 'user.views',
+    permission: '_user.views',
     title: "User",
     icon: 'IconsPerson'
   },
   {
     activeMenu: "/role",
-    permission: 'role.views',
+    permission: '_role.views',
     title: "Role",
     icon: 'IconsPeople'
   },

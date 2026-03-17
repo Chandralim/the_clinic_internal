@@ -184,8 +184,8 @@ if (process.client) {
       }else{
         if(!is_sidebar_open.value){
           sm.style.left="-150px";
-          sm.style.zIndex = '20';
         }
+        sm.style.zIndex = '20';
       }
     }
   })
@@ -201,8 +201,8 @@ onMounted(() => {
       }else{
         if(!is_sidebar_open.value){
           sm.style.left="-150px";
-          sm.style.zIndex = '20';
         }
+        sm.style.zIndex = '20';
       }
     }
 
