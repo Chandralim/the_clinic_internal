@@ -18,13 +18,13 @@
                 Dashboard
               </nuxt-link>
             </li>
-            <li v-if="useUtils().checkPermission('m_clinic.views')"  :class="activeMenu == '/m_clinic'?'active':''" >
+            <li v-if="useUtils().checkPermission('mplatform*clinic.views')"  :class="activeMenu == '/m_clinic'?'active':''" >
               <nuxt-link to="/m_clinic"  class="cursor-pointer" @click="goTo('/m_clinic')">
                 <IconsMoney class="mr-1"/>
                 Clinic
               </nuxt-link>
             </li>
-            <li v-if="useUtils().checkPermission('m_user.views')"  :class="activeMenu == '/m_clinic/user'?'active':''" >
+            <li v-if="useUtils().checkPermission('mplatform*user.views')"  :class="activeMenu == '/m_clinic/user'?'active':''" >
               <nuxt-link to="/m_clinic/user"  class="cursor-pointer" @click="goTo('/m_clinic/user')">
                 <IconsMoney class="mr-1"/>
                 Clinic User
@@ -112,14 +112,14 @@
                 Pekerja
               </nuxt-link>
             </li>
-            <li v-if="useUtils().checkPermission('_user.views')" :class="activeMenu == '/user'?'active':''" >
+            <li v-if="useUtils().checkPermission('platform*user.views')" :class="activeMenu == '/user'?'active':''" >
               <nuxt-link to="/user"  class="cursor-pointer" @click="goTo('/user')">
                 <IconsPerson class="mr-1"/>
                 User
               </nuxt-link>
             </li>
 
-            <li v-if="useUtils().checkPermission('_role_permission.views')" :class="activeMenu == '/role_permission'?'active':''" >
+            <li v-if="useUtils().checkPermission('_roleplatform*permission.views')" :class="activeMenu == '/role_permission'?'active':''" >
               <nuxt-link to="/role_permission"  class="cursor-pointer" @click="goTo('/role_permission')">
                 <IconsPerson class="mr-1"/>
                 Permission Group

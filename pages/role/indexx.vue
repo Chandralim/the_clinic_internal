@@ -3,15 +3,15 @@
     <Header :title="'List Role'" />
     <div class="w-full flex grow flex-col overflow-auto h-0">
       <div class="w-full flex">
-        <button v-if="useUtils().checkPermission('_role.create')" type="button" name="button" class="m-1 text-2xl "
+        <button v-if="useUtils().checkPermission('platform*role.create')" type="button" name="button" class="m-1 text-2xl "
           @click="form_copy()">
           <IconsCopy />
         </button>
-        <button v-if="useUtils().checkPermission('_role.create')" type="button" name="button" class="m-1 text-2xl "
+        <button v-if="useUtils().checkPermission('platform*role.create')" type="button" name="button" class="m-1 text-2xl "
           @click="form_add()">
           <IconsPlus />
         </button>
-        <button v-if="useUtils().checkPermission('_role.modify')" type="button" name="button" class="m-1 text-2xl "
+        <button v-if="useUtils().checkPermission('platform*role.modify')" type="button" name="button" class="m-1 text-2xl "
           @click="form_edit()">
           <IconsEdit/>
         </button>
@@ -89,7 +89,7 @@ definePageMeta({
   // layout: "clear",
   middleware: [
     function (to, from) {
-      if (!useAuthStore().checkPermission('_role.views')) {
+      if (!useAuthStore().checkPermission('platform*role.views')) {
         useCommonStore().loading_full = false;
         return navigateTo('/');
       }

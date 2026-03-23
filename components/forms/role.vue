@@ -22,10 +22,9 @@
               </div>
               <div class="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 flex flex-col flex-wrap p-1">
                   <label for="">Clinic</label>
-
                   <WidthMiniList2 :fnOpen="()=>{showClinic=true}" :dclass="clinic_sl"/>
                   <!-- {{ selected_clinic }} -->
-                    <p class="text-red-500">{{ field_errors.clinic_id }}</p>
+                  <p class="text-red-500">{{ field_errors.clinic_id }}</p>
                 </div>
             </div>
 
@@ -225,7 +224,7 @@ const doSave = async () => {
   data_in.append("scope", role.value.scope);
   data_in.append("permission", JSON.stringify(permissions_checked.value));
   data_in.append("users", JSON.stringify(users_checked.value));
-  data_in.append("clinic_id", selected_clinic.value.id);
+  data_in.append("clinic_id", selected_clinic.value.id || "");
 
 
   let $method = "post";

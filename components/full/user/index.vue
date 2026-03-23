@@ -83,7 +83,7 @@ import { useAlertStore } from '~/store/alert';
 //   // layout: "clear",
 //   middleware: [
 //     function (to, from) {
-//       if (!useAuthStore().checkPermission('_user.views')) {
+//       if (!useAuthStore().checkPermission('platform*user.views')) {
 //         useCommonStore().loading_full = false;
 //         return navigateTo('/');
 //       }
@@ -419,20 +419,20 @@ const fields_thead=ref([
 const enabled_copy = computed(()=>{  
   let result = selected.value > -1 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1
-  && useUtils().checkPermission('_user.create');
+  && useUtils().checkPermission('platform*user.create');
   return result;
 })
 
 const enabled_add = computed(()=>{  
   let result = ['active','nonactive','all'].indexOf(filter_status.value) > -1  
-  && useUtils().checkPermission('_user.create');
+  && useUtils().checkPermission('platform*user.create');
   return result;
 })
 
 const enabled_edit = computed(()=>{  
   let result = selected.value > -1 
   && [undefined,0].indexOf(dt_selected.value.deleted) > -1
-  && useUtils().checkPermissions(['_user.modify']);
+  && useUtils().checkPermissions(['platform*user.modify']);
   return result;
 })
 
