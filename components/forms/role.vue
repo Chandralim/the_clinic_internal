@@ -74,7 +74,7 @@
                   <table class="tacky w-full !table-auto" style="white-space:normal;">
                     <thead >
                       <tr class="sticky -top-1 !z-[2]">
-                        <td colspan="3" class="!bg-slate-800 text-white font-bold">
+                        <td colspan="4" class="!bg-slate-800 text-white font-bold">
                           Detail Permission User
                         </td>
                       </tr>
@@ -84,7 +84,7 @@
                             {{ (users_checked.length != users.length) ? 'Allow' : 'Deny' }}
                           </button>
                         </th> 
-                        <th colspan="2" >
+                        <th colspan="3" >
                           <div class="w-full flex items-center">
                             <input type="text" v-model="search_user" name="search"
                             placeholder="Name">
@@ -108,6 +108,11 @@
                           <td>
                             <div class="w-full h-full flex items-center justify-start">
                               {{ user.fullname }}
+                            </div>
+                          </td>
+                          <td>
+                            <div class="w-full h-full flex items-center justify-start">
+                              {{ user.position }}
                             </div>
                           </td>
                         </tr>

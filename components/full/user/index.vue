@@ -408,6 +408,7 @@ const fields_thead=ref([
   {key:"id",label:"ID",filter_on:1,type:"number"},
   {key:"email",label:"Email",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
   {key:"group",label:"Group",filter_on:1,type:'string'},
+  {key:"position",label:"Position",filter_on:1,type:'string'},
   {key:"is_active",label:"Status",filter_on:1,type:"select",select_item:[{k:'1',v:'Ya'},{k:'0',v:'Tidak'}]},
   {key:"created_utc_at",label:"Created At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},
   {key:"updated_utc_at",label:"Updated At",type:'datetime',dateformat:"dd-MM-y HH:mm:ss",filter_on:1},

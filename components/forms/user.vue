@@ -57,6 +57,15 @@
                 <p class="text-red-500">{{ field_errors.whatsapp_number }}</p>
               </div>
 
+              <div class="w-full sm:w-4/12 md:w-3/12 lg:w-3/12 flex flex-col flex-wrap p-1">
+                <label for="">Position</label>
+                <select v-model="user.position">
+                  <option value=""></option>
+                  <option value="DOCTOR">DOCTOR</option>
+                  <option value="NURSE">NURSE</option>
+                </select>
+                <p class="text-red-500">{{ field_errors.position }}</p>
+              </div>
             
               <div class="w-full sm:w-4/12 md:w-3/12 lg:w-3/12 flex flex-col flex-wrap p-1">
                 <label for="">Status</label>
@@ -132,6 +141,7 @@ const user_temp = {
   phone_number:"",
   whatsapp_number: "",
   is_active: 1,
+  position:""
 };
 
 const user = ref({...user_temp});
@@ -149,6 +159,7 @@ const doSave = async () => {
   data_in.append("fullname", user.value.fullname);
   if(user.value.password) data_in.append("password", user.value.password);
   data_in.append("is_active", user.value.is_active);
+  data_in.append("position", user.value.position);
   data_in.append("birth_date", user.value.birth_date ? $parseDate(user.value.birth_date).toFormat("y-MM-dd") : "");
   data_in.append("birth_place", user.value.birth_place);
   data_in.append("phone_number", user.value.phone_number);
