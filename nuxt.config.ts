@@ -1,84 +1,44 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { resolve } from 'path';
 export default defineNuxtConfig({
-  // rootDir : "",
-  runtimeConfig: {
-    public: {
-      baseURL: process.env.MY_API_ADDR,
-    },
-  },
-  app: {
-    baseURL: process.env.ROUTER_BASE || '/',
-    head: {
-      title: "SC",
-      meta: [
-        { charset: "utf-8" },
-        { name: "viewport", content: "width=device-width, initial-scale=1.0" },
-        { hid: "description", name: "description", content: "" }
-      ],
-      link: [
-        // { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-        {
-          rel: "icon",
-          type: "image/png",
-          href: "/logistik/favicon.png"
-        }
-      ]
-    }
-  },
-  // ssr: true,
-  ssr: false,
+  compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  alias: {
-    '@': resolve(__dirname, '/'),
-  },
-  css: [
-    '~/assets/main.scss'
-  ],
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
+  modules: ['@nuxtjs/tailwindcss','@pinia/nuxt'],
+  // Enables the Nuxt 4/5 folder behavior
+  runtimeConfig: {
+    // public berarti bisa diakses di Client & Server
+    public: {
+      baseURL: process.env.MY_API_ADDR || 'http://localhost:8000', 
     },
   },
+  future: {
+    compatibilityVersion: 4,
+  },
+  ssr: false,
+  // This tells Nuxt that your UI code is inside the app folder
+  // Note: 'server' and 'public' stay outside even with this setting
+  srcDir: 'app/',
   build: {
     transpile: ['@vuepic/vue-datepicker']
   },
-  modules: [
-    // ...
-    '@pinia/nuxt',
-  ],
-
-  nitro: {
-    routeRules: {
-      '/**': {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        }
-      },
-      // "/api/**": { proxy: 'http://127.0.0.1:8000/api/internal/**' },
-      "/api/**": { proxy: 'http://127.0.0.1/transport-be/a9p/**' },
-      // "/api/**": { proxy: 'https://genkagromas.com/api/a9p/**' },
-      // "^/stok/api/**": { proxy: 'http://127.0.0.1/api/a9p/**' },
-      // "/stok/api/**": { proxy: 'http://127.0.0.1/api/a9p/**' }
-      // '/proxy/example': { proxy: 'http://39.98.58.238:8594' },
-      // "/proxy/**": { proxy: '/api/**' },
+  vite: {
+    // Disable certain optimizations that might crash IPC on specific file systems
+    server: {
+      watch: {
+        usePolling: true, // Try this if on a network/external drive
+      }
+    },
+    // Force faster cleanup
+    build: {
+      commonjsOptions: { transformMixedEsModules: true },
     }
   },
-  experimental: {
-    payloadExtraction: false
+  typescript: {
+    typeCheck: false,
+    strict: false
   },
-  components: [{ path: "~/components", global: true }],
-  // proxy: {
-  //   '/api/': {
-  //     target: process.env.API_URL,
-  //     pathRewrite: { '^/api/': '/' },
-  //     // changeOrigin:true 
-  //   }
-  // },
-  devServer: {
-    port: 3003
-  }
+   css: [
+    '~/assets/css/tailwind.css',
+    '~/assets/main.scss'
+  ],
+  components: [{ path: "~/components",pathPrefix: false, global: true }],
 })
