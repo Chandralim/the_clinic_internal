@@ -40,7 +40,7 @@ export const useDownload = () => {
         filename=response.filename || filename;
         const blob = toBlob(response.data, response.contentType);
         const url = URL.createObjectURL(blob);
-        console.log(url);
+        // console.log(url);
         window.open(url, '_blank');
     };
 
@@ -79,7 +79,7 @@ export const useDownload = () => {
                 document.body.removeChild(el)
                 el = null;
             };
-            console.log('Printing has been completed or the print preview mode has been closed');
+            // console.log('Printing has been completed or the print preview mode has been closed');
         };
     }
 

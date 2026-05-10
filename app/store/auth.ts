@@ -56,7 +56,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async checkUser() {
       const token = useCookie('token'); // useCookie new hook in nuxt 3
-          console.log("start call",this.done_get_user_info);
+          // console.log("start call",this.done_get_user_info);
 
       const { data, error, status, pending }: any = useMyLazyFetch('/check_user', {
         method: 'get',
@@ -102,10 +102,10 @@ export const useAuthStore = defineStore('auth', {
             scopes.value = data?.value?.user?.scopes; // set token to cookie
 
             this.done_get_user_info = true;
-          console.log("done_get_user_info call",this.done_get_user_info);
+          // console.log("done_get_user_info call",this.done_get_user_info);
 
           }
-          console.log("just done call",this.done_get_user_info);
+          // console.log("just done call",this.done_get_user_info);
 
           resolve(data);
         }

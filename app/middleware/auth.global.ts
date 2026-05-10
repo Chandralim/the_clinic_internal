@@ -4,12 +4,14 @@ import { useCommonStore } from '~/store/common';
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // console.log("from global middleware", to);
+  useCommonStore().reset_tv();
+
   const { authenticated, done_get_user_info } = storeToRefs(useAuthStore()); // make authenticated state reactive
   const token = useCookie('token'); // get token from cookies
   // console.log(token.value, "token when route");
 
-  console.log("the token",token.value);
-  console.log("to?.name",to?.name);
+  // console.log("the token",token.value);
+  // console.log("to?.name",to?.name);
 
    
   if (token.value) {
@@ -27,7 +29,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // if token doesn't exist redirect to log in
   if (!token.value && to?.name !== 'login') {
-    console.log("call outside",to?.name, !token.value);
+    // console.log("call outside",to?.name, !token.value);
     abortNavigation();
     return navigateTo('/login');
   }
@@ -46,10 +48,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
     //     // return;
     //   });    
     try {
-      console.log("call checkuser");
+      // console.log("call checkuser");
       // KUNCI UTAMA: Gunakan await di sini agar middleware "menunggu"
       await checkUser();
-            console.log("done call checkuser");
+            // console.log("done call checkuser");
 
     } catch (error) {
       console.error("Gagal mengambil data user:", error);

@@ -15,7 +15,7 @@ export const useErrorStore = defineStore('error', {
 
     trigger(error: any, fields = {},afterMount=false) {
       let dErr=afterMount?error:error.value;
-      console.log(dErr);
+      // console.log(dErr);
       let errorStatusCode = dErr.statusCode;
 
       const { show, status, message } = storeToRefs(useAlertStore());

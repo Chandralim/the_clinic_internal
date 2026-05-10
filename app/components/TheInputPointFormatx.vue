@@ -65,7 +65,7 @@ const blur=(val:any)=>{
   
   let result = typeof val == 'object' ? val.target.value : val;
   result = result || props.value;
-  console.log("b",parseInt(result),result);
+  // console.log("b",parseInt(result),result);
   
   if(parseInt(result) < 0){
     inputVal.value = "-"+blurIDFormat(result);  
@@ -76,12 +76,12 @@ const blur=(val:any)=>{
   }
 
 
-  console.log("bx",blurIDFormat(result),Number(oriIDFormat(result)));
+  // console.log("bx",blurIDFormat(result),Number(oriIDFormat(result)));
 
 }
 
 onMounted(() => {
-  console.log("m",parseInt(props.value),props.value);
+  // console.log("m",parseInt(props.value),props.value);
 
   // change(parseInt(props.value))
   change(props.value)
@@ -104,7 +104,7 @@ const clearNumber = (val)=>{
 }
 let isNegative = false;
 const change=(val)=>{
-  console.log("ch",parseInt(val),val);
+  // console.log("ch",parseInt(val),val);
   if(val=="-") {
     inputVal.value = "-";
     return;

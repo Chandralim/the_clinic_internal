@@ -137,7 +137,7 @@
         </form>
     </div>
 
-    <FullClinic :ispop="true" :showpop="showClinic" :fnClose="() => {
+    <FullClinic :ispop="true" :p_callData="showClinic" :fnClose="() => {
       showClinic = false; 
     }" @selectedList="clinic_sl.build($event)"/>
   </section>

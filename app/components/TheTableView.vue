@@ -856,7 +856,7 @@ const ref_keyword = ref(null);
 let autoSearchKeywordTimeout  = null;
 
 const autoSearchKeyword= (event)=>{
-  console.log(event);
+  // console.log(event);
   if(['Shift','Control','Alt','ArrowRight','ArrowLeft','ArrowUp','ArrowDown'
   ,'Insert','Home','PageUp','PageDown','End','PrintScreen','Pause'].indexOf(event.key)>-1 ){
 

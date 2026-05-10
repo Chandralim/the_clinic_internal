@@ -70,15 +70,15 @@ export const useMoveDOMx:any = function(_ref,items){
     idx = loopGetDataIndex(e.target);
     touch_interval = setInterval(() => {
       count_interval+=100;
-      console.log(count_interval);
+      // console.log(count_interval);
       
     }, 100);
   }
 
   function touchMove(e){
     let target =e.target; 
-    console.log(e);
-    console.log(e.currentTarget);
+    // console.log(e);
+    // console.log(e.currentTarget);
 
     // result.condition = "move";
 
@@ -94,7 +94,7 @@ export const useMoveDOMx:any = function(_ref,items){
 
   function touchEnd(e){
     clearInterval(touch_interval);
-    console.log(count_interval);
+    // console.log(count_interval);
     let coor = e.changedTouches[0];
     let endIdx = -1;        
     if(count_interval > 400){      

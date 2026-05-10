@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!ispop || (ispop && showpop)" class="w-full flex grow flex-col overflow-auto h-0 z-10" :class="ispop ?'fixed':'relative'">
+    <div v-if="p_callData" class="w-full flex grow flex-col overflow-auto h-0 z-10" :class="ispop ?'fixed':'relative'">
         <TheHeaderPopup v-if="ispop" :title="'Form User'" :fn="fnClose" class="w-100 flex align-items-center"
         style="color:white;" />
         <div class="w-full flex grow flex-col overflow-auto h-0">
@@ -98,7 +98,7 @@ const props = defineProps({
     required: false,
     default:false
   },
-  showpop: {
+  p_callData: {
     type: Boolean,
     required: false,
     default:false
@@ -156,29 +156,30 @@ params._TimeZoneOffset = new Date().getTimezoneOffset();
 
 
 const token = useCookie('token');
-const { data: users } = await useAsyncData(async () => {
-  if (props.ispop) return;
-  useCommonStore().loading_full = true;
-  params.filter_status = filter_status.value;
+const users = ref([]);
+// const { data: users } = await useAsyncData(async () => {
+//   if (props.ispop) return;
+//   useCommonStore().loading_full = true;
+//   params.filter_status = filter_status.value;
 
-  const { data, error, status } = await useMyFetch("/users", {
-    method: 'get',
-    headers: {
-      'Authorization': `Bearer ${token.value}`,
-      'Accept': 'application/json'
-    },
-    params: params,
-    retry: 0,
-  });
-  useCommonStore().loading_full = false;
+//   const { data, error, status } = await useMyFetch("/users", {
+//     method: 'get',
+//     headers: {
+//       'Authorization': `Bearer ${token.value}`,
+//       'Accept': 'application/json'
+//     },
+//     params: params,
+//     retry: 0,
+//   });
+//   useCommonStore().loading_full = false;
 
-  if (status.value === 'error') {
-    useErrorStore().trigger(error);
-    return [];
-  }
+//   if (status.value === 'error') {
+//     useErrorStore().trigger(error);
+//     return [];
+//   }
 
-  return data.value.data;
-});
+//   return data.value.data;
+// });
 
 
 const search = ref("");
@@ -201,8 +202,8 @@ const dt_selected = computed(()=>{
 
 const inject_params = () => {
   params.like = "";
-  // console.log("globalkey",useCommonStore()._tv.global_keyword);
-  let words = JSON.parse(JSON.stringify(useCommonStore()._tv.global_keyword[frmName]));
+  let gkey = useCommonStore()._tv.global_keyword;
+  let words = gkey[frmName]!= undefined ? JSON.parse(JSON.stringify(useCommonStore()._tv.global_keyword[frmName])) : '';
   if (words != "") {
     params.like = `id:%${words}%,name:%${words}%`;
   }
@@ -446,7 +447,7 @@ const enabled_remove = computed(()=>{
 })
 
 
-watch(() => props.showpop, async(newVal, oldVal) => {
+watch(() => props.p_callData, async(newVal, oldVal) => {
   if (newVal == true) {
     searching();
   }

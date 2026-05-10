@@ -18,5 +18,10 @@ export const useCommonStore = defineStore('common', {
     triggerSidebar(act: boolean) {
       this.is_sidebar_open = act;
     },
+    reset_tv(){
+      this._tv.filter_box = false;
+      this._tv.filter_model = {};
+      this._tv.global_keyword = {};
+    }
   },
 });
