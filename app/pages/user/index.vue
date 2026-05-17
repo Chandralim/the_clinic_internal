@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col">
     <TheHeader :title="'List User'" />
-    <FullUser />
+    <FullUser  :p_callData='true'/>
   </div>
 </template>
 
