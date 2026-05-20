@@ -163,6 +163,7 @@ const data_permissions = data_lists.value.data_permissions ?? [];
 
 
 const doSave = async () => {
+  if(useCommonStore().loading_full) return;
   useCommonStore().loading_full = true;
 
   let data_in = new FormData();

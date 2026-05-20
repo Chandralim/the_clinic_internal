@@ -132,6 +132,7 @@ const fullname = useCookie('fullname');
 
 
   const doSave = async () => {
+    if(useCommonStore().loading_full) return;
     useCommonStore().loading_full = true;
     field_errors.value = {};
   
