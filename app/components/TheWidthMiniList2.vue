@@ -33,7 +33,10 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['setHadClose']);
+
 const clearIt = () => {
+  emit('setHadClose',true);
   props.dclass.build();
 }
 </script>
