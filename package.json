@@ -14,6 +14,7 @@
     "@vuepic/vue-datepicker": "^12.1.0",
     "luxon": "^3.7.2",
     "nuxt": "^4.4.2",
+    "pdfjs-dist": "^4.5.136",
     "vue": "^3.5.32",
     "vue-router": "^5.0.4"
   },
