@@ -51,7 +51,6 @@ import { useAuthStore } from '~/store/auth';
 import { useErrorStore } from '~/store/error';
 import { useCommonStore } from '~/store/common';
 import { useAlertStore } from '~/store/alert';
-import { toDisplayString } from 'nuxt/dist/app/compat/capi';
 
 definePageMeta({
   layout: "clear",

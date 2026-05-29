@@ -54,122 +54,122 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false;
       }
     },
-    async checkUser() {
-      const token = useCookie('token'); // useCookie new hook in nuxt 3
-          // console.log("start call",this.done_get_user_info);
-
-      const { data, error, status, pending }: any = useMyLazyFetch('/check_user', {
-        method: 'get',
-        headers: {
-          'Authorization': `Bearer ${token.value}`,
-          // 'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        // body: {
-        //   email,
-        //   password,
-        // },
-        timeout: 1000,
-      });
-
-      useCommonStore().loading_full = pending.value;
-      while (pending.value) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-      useCommonStore().loading_full = pending.value;
-
-      return await new Promise<any>((resolve, reject) => {
-        if (status.value == "error") {
-          const { trigger } = useErrorStore();
-
-          trigger(error);
-          reject(error);
-        } else {
-
-          if (data.value) {
-            const email = useCookie('email'); // useCookie new hook in nuxt 3
-            email.value = data?.value?.user?.email; // set token to cookie
-
-            const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
-            fullname.value = data?.value?.user?.fullname; // set token to cookie
-
-            const role = useCookie('role'); // useCookie new hook in nuxt 3
-            role.value = data?.value?.user?.role; // set token to cookie
-
-            localStorage.setItem("permissions", JSON.stringify(data?.value?.user?.permissions));
-
-            const scopes = useCookie('scopes'); // useCookie new hook in nuxt 3
-            scopes.value = data?.value?.user?.scopes; // set token to cookie
-
-            this.done_get_user_info = true;
-          // console.log("done_get_user_info call",this.done_get_user_info);
-
-          }
-          // console.log("just done call",this.done_get_user_info);
-
-          resolve(data);
-        }
-
-      })
-    },
     // async checkUser() {
     //   const token = useCookie('token'); // useCookie new hook in nuxt 3
-    //   const { apiBM } = useMyApis();
-
-    //   useCommonStore().loading_full = true;
-    //   try{
     //       console.log("start call",this.done_get_user_info);
 
-    //     const {data}: any = apiBM('/check_user', {
-    //       method: 'get',
-    //       headers: {
-    //         'Authorization': `Bearer ${token.value}`,
-    //         // 'Content-Type': 'application/json',
-    //         'Accept': 'application/json'
-    //       },
-    //       // body: {
-    //       //   email,
-    //       //   password,
-    //       // },
-    //       // timeout: 1000,
-    //     });
-    //     if (data.value) {
-    //       const email = useCookie('email'); // useCookie new hook in nuxt 3
-    //       email.value = data?.value?.user?.email; // set token to cookie
+    //   const { data, error, status, pending }: any = useMyLazyFetch('/check_user', {
+    //     method: 'get',
+    //     headers: {
+    //       'Authorization': `Bearer ${token.value}`,
+    //       // 'Content-Type': 'application/json',
+    //       'Accept': 'application/json'
+    //     },
+    //     // body: {
+    //     //   email,
+    //     //   password,
+    //     // },
+    //     timeout: 1000,
+    //   });
 
-    //       const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
-    //       fullname.value = data?.value?.user?.fullname; // set token to cookie
+    //   useCommonStore().loading_full = pending.value;
+    //   while (pending.value) {
+    //     await new Promise(resolve => setTimeout(resolve, 1000));
+    //   }
+    //   useCommonStore().loading_full = pending.value;
 
-    //       const role = useCookie('role'); // useCookie new hook in nuxt 3
-    //       role.value = data?.value?.user?.role; // set token to cookie
+    //   return await new Promise<any>((resolve, reject) => {
+    //     if (status.value == "error") {
+    //       const { trigger } = useErrorStore();
 
-    //       const scopes = useCookie('scopes'); // useCookie new hook in nuxt 3
-    //       scopes.value = data?.value?.user?.scopes; // set token to cookie
-          
-    //       this.done_get_user_info = true;
-    //       if (import.meta.client){
+    //       trigger(error);
+    //       reject(error);
+    //     } else {
+
+    //       if (data.value) {
+    //         const email = useCookie('email'); // useCookie new hook in nuxt 3
+    //         email.value = data?.value?.user?.email; // set token to cookie
+
+    //         const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
+    //         fullname.value = data?.value?.user?.fullname; // set token to cookie
+
+    //         const role = useCookie('role'); // useCookie new hook in nuxt 3
+    //         role.value = data?.value?.user?.role; // set token to cookie
+
     //         localStorage.setItem("permissions", JSON.stringify(data?.value?.user?.permissions));
-    //       }
+
+    //         const scopes = useCookie('scopes'); // useCookie new hook in nuxt 3
+    //         scopes.value = data?.value?.user?.scopes; // set token to cookie
+
+    //         this.done_get_user_info = true;
     //       console.log("done_get_user_info call",this.done_get_user_info);
 
-    //     }
+    //       }
     //       console.log("just done call",this.done_get_user_info);
 
-    //     return data;
-    //   }catch (error: any) {
-    //     console.log(error);
-    //      const errorDetail = {
-    //       statusCode: error.status,
-    //       data:error.data
-    //     };
+    //       resolve(data);
+    //     }
 
-    //     const { trigger } = useErrorStore();
-    //     trigger(errorDetail,{},true);
-    //     throw errorDetail; 
-    //   } finally {
-    //     useCommonStore().loading_full = false;
-    //   }
+    //   })
     // },
+    async checkUser() {
+      const token = useCookie('token'); // useCookie new hook in nuxt 3
+      const { apiBM } = useMyApis();
+
+      useCommonStore().loading_full = true;
+      try{
+          // console.log("start call",this.done_get_user_info);
+
+        const {data}: any = apiBM('/check_user', {
+          method: 'get',
+          headers: {
+            'Authorization': `Bearer ${token.value}`,
+            // 'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          // body: {
+          //   email,
+          //   password,
+          // },
+          // timeout: 1000,
+        });
+        if (data.value) {
+          const email = useCookie('email'); // useCookie new hook in nuxt 3
+          email.value = data?.value?.user?.email; // set token to cookie
+
+          const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
+          fullname.value = data?.value?.user?.fullname; // set token to cookie
+
+          const role = useCookie('role'); // useCookie new hook in nuxt 3
+          role.value = data?.value?.user?.role; // set token to cookie
+
+          const scopes = useCookie('scopes'); // useCookie new hook in nuxt 3
+          scopes.value = data?.value?.user?.scopes; // set token to cookie
+          
+          this.done_get_user_info = true;
+          if (import.meta.client){
+            localStorage.setItem("permissions", JSON.stringify(data?.value?.user?.permissions));
+          }
+          // console.log("done_get_user_info call",this.done_get_user_info);
+
+        }
+          // console.log("just done call",this.done_get_user_info);
+
+        return data;
+      }catch (error: any) {
+        console.log(error);
+         const errorDetail = {
+          statusCode: error.status,
+          data:error.data
+        };
+
+        const { trigger } = useErrorStore();
+        trigger(errorDetail,{},true);
+        throw errorDetail; 
+      } finally {
+        useCommonStore().loading_full = false;
+      }
+    },
     logUserOut() {
       this.clearAuth();
     },
