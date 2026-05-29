@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: 'nuxt-app',
+    name: 'Clinic-Internal',
     script: './.output/server/index.mjs',
     env: {
       PORT: 3002

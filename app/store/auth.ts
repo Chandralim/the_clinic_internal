@@ -114,13 +114,13 @@ export const useAuthStore = defineStore('auth', {
     // },
     async checkUser() {
       const token = useCookie('token'); // useCookie new hook in nuxt 3
-      const { apiBM } = useMyApis();
+      const { apiAM } = useMyApis();
 
       useCommonStore().loading_full = true;
       try{
           // console.log("start call",this.done_get_user_info);
 
-        const {data}: any = apiBM('/check_user', {
+        const {data}: any = apiAM('/check_user', {
           method: 'get',
           headers: {
             'Authorization': `Bearer ${token.value}`,
