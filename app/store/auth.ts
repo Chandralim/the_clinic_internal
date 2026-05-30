@@ -118,9 +118,9 @@ export const useAuthStore = defineStore('auth', {
 
       useCommonStore().loading_full = true;
       try{
-          // console.log("start call",this.done_get_user_info);
+          console.log("start call",this.done_get_user_info);
 
-        const {data}: any = apiAM('/check_user', {
+        const data: any =await apiAM('/check_user', {
           method: 'get',
           headers: {
             'Authorization': `Bearer ${token.value}`,
@@ -133,27 +133,27 @@ export const useAuthStore = defineStore('auth', {
           // },
           // timeout: 1000,
         });
-        if (data.value) {
+        if (data) {
           const email = useCookie('email'); // useCookie new hook in nuxt 3
-          email.value = data?.value?.user?.email; // set token to cookie
+          email.value = data?.user?.email; // set token to cookie
 
           const fullname = useCookie('fullname'); // useCookie new hook in nuxt 3
-          fullname.value = data?.value?.user?.fullname; // set token to cookie
+          fullname.value = data?.user?.fullname; // set token to cookie
 
           const role = useCookie('role'); // useCookie new hook in nuxt 3
-          role.value = data?.value?.user?.role; // set token to cookie
+          role.value = data?.user?.role; // set token to cookie
 
           const scopes = useCookie('scopes'); // useCookie new hook in nuxt 3
-          scopes.value = data?.value?.user?.scopes; // set token to cookie
+          scopes.value = data?.user?.scopes; // set token to cookie
           
           this.done_get_user_info = true;
           if (import.meta.client){
-            localStorage.setItem("permissions", JSON.stringify(data?.value?.user?.permissions));
+            localStorage.setItem("permissions", JSON.stringify(data?.user?.permissions));
           }
-          // console.log("done_get_user_info call",this.done_get_user_info);
+          console.log("done_get_user_info call",this.done_get_user_info);
 
         }
-          // console.log("just done call",this.done_get_user_info);
+          console.log("just done call",this.done_get_user_info);
 
         return data;
       }catch (error: any) {
