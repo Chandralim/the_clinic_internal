@@ -75,8 +75,8 @@
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '~/store/auth';
 
-import { useErrorStore } from '~/store/error';
-import { useCommonStore } from '~/store/common';
+import { useErrorStore } from '@core/store/error';
+import { useCommonStore } from '@core/store/common';
 import { computed } from 'vue';
 
 const router = useRouter();

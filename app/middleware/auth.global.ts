@@ -1,13 +1,22 @@
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '~/store/auth';
-import { useCommonStore } from '~/store/common';
+import { useCommonStore } from '@core/store/common';
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // console.log("from global middleware", to);
-  useCommonStore().reset_tv();
-
-  const { authenticated, done_get_user_info } = storeToRefs(useAuthStore()); // make authenticated state reactive
-  const token = useCookie('token'); // get token from cookies
+  // 1. Ambil nuxtApp terlebih dahulu
+  const nuxtApp = useNuxtApp(); 
+  
+  // 2. Panggil store dengan memasukkan $pinia bawaan Nuxt secara eksplisit
+  const commonStore = useCommonStore(nuxtApp.$pinia);
+  const authStore = useAuthStore(nuxtApp.$pinia);
+  
+  commonStore.reset_tv();
+  // 3. Lakukan storeToRefs seperti biasa
+  const { authenticated, done_get_user_info } = storeToRefs(authStore);
+  const token = useCookie('token');
+  
+  // Sisa kode Anda ke bawah tetap sama...
   // console.log(token.value, "token when route");
 
   // console.log("the token",token.value);

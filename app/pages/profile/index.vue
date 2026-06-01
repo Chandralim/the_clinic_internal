@@ -51,9 +51,9 @@
   import { useAuthStore } from '~/store/auth';
   
   import { storeToRefs } from 'pinia';
-  import { useErrorStore } from '~/store/error';
-  import { useCommonStore } from '~/store/common';
-  import { useAlertStore } from '~/store/alert';
+  import { useErrorStore } from '@core/store/error';
+  import { useCommonStore } from '@core/store/common';
+  import { useAlertStore } from '@core/store/alert';
   
   const { checkScopes,checkRole } = useAuthStore();
     definePageMeta({

@@ -5,8 +5,8 @@ definePageMeta({
 
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
-import { useErrorStore } from '~/store/error'; // import the auth store we just created
-import { useCommonStore } from '~/store/common';
+import { useErrorStore } from '@core/store/error'; // import the auth store we just created
+import { useCommonStore } from '@core/store/common';
 
 const { authenticateUser } = useAuthStore(); // use authenticateUser action from  auth store
 const { trigger } = useErrorStore();

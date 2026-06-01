@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { useErrorStore } from '~/store/error';
-import { useCommonStore } from '~/store/common';
+import { useErrorStore } from '@core/store/error';
+import { useCommonStore } from '@core/store/common';
 
 
 interface UserPayloadInterface {
@@ -118,7 +118,7 @@ export const useAuthStore = defineStore('auth', {
 
       useCommonStore().loading_full = true;
       try{
-          console.log("start call",this.done_get_user_info);
+          // console.log("start call",this.done_get_user_info);
 
         const data: any =await apiAM('/check_user', {
           method: 'get',
@@ -150,14 +150,14 @@ export const useAuthStore = defineStore('auth', {
           if (import.meta.client){
             localStorage.setItem("permissions", JSON.stringify(data?.user?.permissions));
           }
-          console.log("done_get_user_info call",this.done_get_user_info);
+          // console.log("done_get_user_info call",this.done_get_user_info);
 
         }
-          console.log("just done call",this.done_get_user_info);
+          // console.log("just done call",this.done_get_user_info);
 
         return data;
       }catch (error: any) {
-        console.log(error);
+        // console.log(error);
          const errorDetail = {
           statusCode: error.status,
           data:error.data

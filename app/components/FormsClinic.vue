@@ -75,8 +75,8 @@
 </template>
 
 <script setup>
-import { useErrorStore } from '~/store/error';
-import { useCommonStore } from '~/store/common';
+import { useErrorStore } from '@core/store/error';
+import { useCommonStore } from '@core/store/common';
 
 const props = defineProps({
   show: {

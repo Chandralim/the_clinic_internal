@@ -7,7 +7,7 @@
 
 <script setup>
 import { useAuthStore } from '~/store/auth';
-import { useCommonStore } from '~/store/common';
+import { useCommonStore } from '@core/store/common';
 
 definePageMeta({
   // layout: "clear",

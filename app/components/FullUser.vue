@@ -75,9 +75,9 @@
 const { $DateTime } = useNuxtApp()
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '~/store/auth';
-import { useErrorStore } from '~/store/error';
-import { useCommonStore } from '~/store/common';
-import { useAlertStore } from '~/store/alert';
+import { useErrorStore } from '@core/store/error';
+import { useCommonStore } from '@core/store/common';
+import { useAlertStore } from '@core/store/alert';
 
 // definePageMeta({
 //   // layout: "clear",
@@ -408,6 +408,7 @@ const fields_thead=ref([
   {key:"no",label:"No",isai:true},
   {key:"id",label:"ID",filter_on:1,type:"number"},
   {key:"email",label:"Email",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
+  {key:"fullname",label:"Fullname",freeze:1, filter_on:1,type:'string',sort:{priority:1,type:"asc"}},
   {key:"group",label:"Group",filter_on:1,type:'string'},
   {key:"position",label:"Position",filter_on:1,type:'string'},
   {key:"is_active",label:"Status",filter_on:1,type:"select",select_item:[{k:'1',v:'Ya'},{k:'0',v:'Tidak'}]},

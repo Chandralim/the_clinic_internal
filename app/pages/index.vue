@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCommonStore } from '~/store/common';
+import { useCommonStore } from '@core/store/common';
 useCommonStore().loading_full = false;
 
 </script>

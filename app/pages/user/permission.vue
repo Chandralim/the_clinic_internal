@@ -48,9 +48,9 @@
 <script lang="ts" setup>
 import { useAuthStore } from '~/store/auth';
 
-import { useErrorStore } from '~/store/error';
-import { useCommonStore } from '~/store/common';
-import { useAlertStore } from '~/store/alert';
+import { useErrorStore } from '@core/store/error';
+import { useCommonStore } from '@core/store/common';
+import { useAlertStore } from '@core/store/alert';
 
 definePageMeta({
   layout: "clear",
